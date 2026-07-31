@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMPDocs - Cours, TD, TP et Examens de l'Université Mohammed Premier (UMP Oujda)</title>
+    <meta name="description" content="Téléchargez gratuitement tous les cours, TD, TP, résumés et examens pour toutes les filières (MIP, PC, IA...) de l'Université Mohammed Premier (UMP) d'Oujda.">
+    <meta name="keywords" content="UMP, Oujda, FSO, FSJES, EST, université mohammed premier, cours, examens, TD, TP, MIP, PC, math, physique, IA, maroc, étudiant">
+    
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <!-- Script officiel pour le bouton Google -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <style>
+        body.dark-mode { background-color: #121212 !important; color: #e0e0e0 !important; }
+        body.dark-mode header { background-color: #1a1a1a !important; border-bottom: 1px solid #333; }
+        body.dark-mode .hero { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important; box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5) !important; }
+        body.dark-mode input, body.dark-mode select { background-color: #2d2d2d !important; color: #fff !important; border-color: #444 !important; }
+        body.dark-mode .document-card { background-color: #1e1e1e !important; box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important; border-color: #333 !important;}
+        body.dark-mode .document-card:hover { box-shadow: 0 12px 25px rgba(0,0,0,0.5) !important; }
+        body.dark-mode .document-card h3 { color: #60a5fa !important; }
+        body.dark-mode .document-card p, body.dark-mode .document-card h4 { color: #aaa !important; }
+        body.dark-mode .document-card span { background-color: #333 !important; color: #e0e0e0 !important; }
+        body.dark-mode .comment-section { border-top-color: #444 !important; }
+        body.dark-mode .comment-item { background-color: #2a2a2a !important; color: #e0e0e0 !important; }
+        body.dark-mode #pagination-container span { color: #e0e0e0 !important; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">🎓 UMPDocs</div>
+        <nav style="display: flex; align-items: center; gap: 15px;">
+            <a href="/admin.html" style="color: white; text-decoration: none;">Administration</a>
+            
+            <!-- NOUVEAU : Bouton Connexion -->
+            <button id="open-auth-modal" style="background: white; color: #0056b3; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s;">
+                👤 Se connecter
+            </button>
+            <!-- NOUVEAU : Bouton Connexion -->
+            <button id="open-auth-modal" style="background: white; color: #0056b3; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer;">
+                👤 Connexion
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h1>Bienvenue sur UMPDocs</h1>
+            <p>Consultez et téléchargez vos Cours, TD, TP et Examens par filière et semestre.</p>
+            <input type="text" id="search-bar" placeholder="Rechercher un module ou un cours...">
+        </section>
+
+        <!-- Section des filtres -->
+        <section style="max-width: 1000px; margin: 15px auto; padding: 0 20px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; align-items: center;">
+            <div>
+                <label for="filtre-filiere" style="font-weight: bold; margin-right: 5px;">Filière :</label>
+                <select id="filtre-filiere" style="padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
+                    <option value="Tous">Toutes les filières</option>
+                    <option value="MIP-Info">MIP-Info</option>
+                    <option value="MIP-Math">MIP-Math</option>
+                    <option value="PC-P">PC-P</option>
+                    <option value="PC-C">PC-C</option>
+                    <option value="IA">IA</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="filtre-semestre" style="font-weight: bold; margin-right: 5px;">Semestre :</label>
+                <select id="filtre-semestre" style="padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
+                    <option value="Tous">Tous les semestres</option>
+                    <option value="Semestre 1">Semestre 1</option>
+                    <option value="Semestre 2">Semestre 2</option>
+                    <option value="Semestre 3">Semestre 3</option>
+                    <option value="Semestre 4">Semestre 4</option>
+                    <option value="Semestre 5">Semestre 5</option>
+                    <option value="Semestre 6">Semestre 6</option>
+                </select>
+            </div>
+
+            <div id="filtre-option-container" style="display: none;">
+                <label for="filtre-option" style="font-weight: bold; margin-right: 5px;">Option :</label>
+                <select id="filtre-option" style="padding: 8px; border-radius: 6px; border: 1px solid #ccc;">
+                    <option value="Tous">Toutes les options</option>
+                    <option value="Electronique et systèmes embarquées">Electronique et systèmes embarquées</option>
+                    <option value="Mécanique et énergetique">Mécanique et énergetique</option>
+                    <option value="Energies renouvlables">Energies renouvlables</option>
+                    <option value="Radiophysique">Radiophysique</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Section des catégories -->
+        <section style="max-width: 1000px; margin: 15px auto; padding: 0 20px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+            <button class="filter-btn active" data-category="Tous" style="padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; background-color: #0056b3; color: white; font-weight: bold;">Tous</button>
+            <button class="filter-btn" data-category="Cours" style="padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; background-color: #e2e8f0; color: #333; font-weight: bold;">📚 Cours</button>
+            <button class="filter-btn" data-category="TD" style="padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; background-color: #e2e8f0; color: #333; font-weight: bold;">📝 TD</button>
+            <button class="filter-btn" data-category="TP" style="padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; background-color: #e2e8f0; color: #333; font-weight: bold;">🧪 TP</button>
+            <button class="filter-btn" data-category="Examen" style="padding: 8px 16px; border: none; border-radius: 20px; cursor: pointer; background-color: #e2e8f0; color: #333; font-weight: bold;">📋 Examens</button>
+        </section>
+
+        <!-- Affichage de la liste des documents -->
+        <section class="documents-section">
+            <h2 style="text-align: center;">Documents disponibles</h2>
+            <div id="documents-list" class="grid">
+                <p class="loading">Chargement des documents...</p>
+            </div>
+        </section>
+
+        <!-- NOUVEL EMPLACEMENT : PARTAGER UN DOCUMENT -->
+        <section style="max-width: 1000px; margin: 40px auto 20px auto; padding: 20px; background: white; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-left: 5px solid #28a745;" class="document-card">
+            <h3 style="margin-top: 0; color: #28a745; display: flex; align-items: center; gap: 8px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16"><path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/><path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/></svg>
+                Partager un document avec la communauté
+            </h3>
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">Sélectionnez d'abord votre <strong>Filière</strong> et votre <strong>Semestre</strong> dans les filtres en haut de page, puis ajoutez votre fichier pour aider les autres étudiants !</p>
+            
+            <form id="public-upload-form" style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                <input type="text" id="pub-title" placeholder="Titre (ex: Résumé Chap 1)" required style="flex: 1; min-width: 180px; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+                <input type="text" id="pub-module" placeholder="Module (ex: Algèbre)" required style="flex: 1; min-width: 150px; padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+                <select id="pub-category" required style="padding: 10px; border-radius: 6px; border: 1px solid #ccc;">
+                    <option value="Cours">Cours</option>
+                    <option value="TD">TD</option>
+                    <option value="TP">TP</option>
+                    <option value="Examen">Examen</option>
+                </select>
+                <input type="file" id="pub-file" accept="application/pdf" required style="padding: 5px; max-width: 200px;">
+                <button type="submit" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: transform 0.2s;">Publier</button>
+            </form>
+            <p id="pub-message" style="margin-top: 10px; font-weight: bold; font-size: 0.9rem;"></p>
+        </section>
+
+        <!-- Boîte à requêtes -->
+        <section style="max-width: 1000px; margin: 20px auto 50px auto; padding: 25px; border-radius: 12px; text-align: center;" class="document-card">
+            <h2 style="margin-top: 0; color: #0056b3;">📥 Vous ne trouvez pas votre cours ?</h2>
+            <p style="margin-bottom: 20px;">Demandez-le ici ! Nous ferons de notre mieux pour l'ajouter rapidement.</p>
+            <div style="display: flex; gap: 10px; max-width: 600px; margin: 0 auto; flex-wrap: wrap;">
+                <input type="text" id="request-input" placeholder="Ex: Résumé de Thermodynamique (S1)..." style="flex: 1; padding: 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem; min-width: 250px;">
+                <button onclick="envoyerRequete()" style="background-color: #28a745; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer;">Envoyer la demande</button>
+            </div>
+            <p id="request-msg" style="margin-top: 15px; font-weight: bold; font-size: 0.95rem;"></p>
+        </section>
+    </main>
+
+    <script src="/assets/js/main.js"></script>
+    <!-- MODALE DE CONNEXION / INSCRIPTION -->
+    <div id="auth-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); position: relative;" class="document-card">
+            <button onclick="fermerAuthModal()" style="position: absolute; top: 15px; right: 15px; background: none; border: none; font-size: 1.2rem; cursor: pointer; font-weight: bold;">✕</button>
+            
+            <h2 id="auth-title" style="margin-top: 0; color: #0056b3; text-align: center;">Connexion</h2>
+            
+            <div id="auth-form-container">
+                <!-- Formulaire dynamique géré en JS -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

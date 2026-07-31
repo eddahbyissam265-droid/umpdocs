@@ -1,0 +1,176 @@
+/* 1. IMPORTATION D'UNE POLICE MODERNE */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
+/* ========================================= */
+/*               STYLE DE BASE               */
+/* ========================================= */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* ========================================= */
+/*              BARRE DE NAVIGATION          */
+/* ========================================= */
+header {
+    background-color: #0056b3;
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+/* ========================================= */
+/*         HERO SECTION (L'EN-TÊTE)          */
+/* ========================================= */
+.hero {
+    background: linear-gradient(135deg, #0056b3 0%, #00d2ff 100%);
+    color: white;
+    padding: 60px 20px;
+    text-align: center;
+    border-radius: 0 0 40px 40px;
+    box-shadow: 0 10px 20px rgba(0, 86, 179, 0.2);
+    margin-bottom: 40px;
+}
+
+.hero h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin: 0 0 15px 0;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.hero p {
+    font-size: 1.1rem;
+    opacity: 0.95;
+    max-width: 600px;
+    margin: 0 auto 25px auto;
+}
+
+#search-bar {
+    padding: 15px 25px;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 30px;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    outline: none;
+    transition: box-shadow 0.3s;
+}
+
+#search-bar:focus {
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* ========================================= */
+/*            CARTES DE DOCUMENTS            */
+/* ========================================= */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.document-card {
+    background: white !important;
+    border: none !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.document-card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 12px 25px rgba(0,0,0,0.1) !important;
+}
+
+/* ========================================= */
+/*            BOUTONS ET FILTRES             */
+/* ========================================= */
+button, select {
+    font-family: 'Poppins', sans-serif;
+}
+
+.filter-btn {
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.filter-btn:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* ========================================= */
+/*          MODE SOMBRE (DARK MODE)          */
+/* ========================================= */
+body.dark-mode {
+    background-color: #121212 !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode header {
+    background-color: #1a1a1a !important;
+    border-bottom: 1px solid #333;
+}
+
+body.dark-mode .hero {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.dark-mode input, body.dark-mode select {
+    background-color: #2d2d2d !important;
+    color: #fff !important;
+    border-color: #444 !important;
+}
+
+body.dark-mode .document-card {
+    background-color: #1e1e1e !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
+}
+
+body.dark-mode .document-card:hover {
+    box-shadow: 0 12px 25px rgba(0,0,0,0.5) !important;
+}
+
+body.dark-mode .document-card h3 {
+    color: #60a5fa !important;
+}
+
+body.dark-mode .document-card p, body.dark-mode .document-card h4 {
+    color: #aaa !important;
+}
+
+body.dark-mode .comment-section {
+    border-top-color: #444 !important;
+}
+
+body.dark-mode .comment-item {
+    background-color: #2a2a2a !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode #pagination-container span {
+    color: #e0e0e0 !important;
+}
