@@ -16,7 +16,7 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
 
     try {
         // On envoie tout à ton serveur Node.js
-        const response = await fetch('/api/upload', {
+        const response = await fetch('/api/documents', {
             method: 'POST',
             body: formData
         });
