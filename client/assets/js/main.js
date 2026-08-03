@@ -39,7 +39,7 @@ async function fetchDocuments() {
                 <h3 class="card-title">${doc.title}</h3>
                 <span class="card-badge">${doc.module}</span>
                 <div class="card-actions">
-                    <a href="${doc.file_url}" target="_blank" class="btn-view">Consulter le PDF</a>
+                    <a href="${doc.file_path}" target="_blank" class="btn-view">Consulter le PDF</a>
                 </div>
             `;
             
