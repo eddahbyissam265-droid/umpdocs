@@ -16,7 +16,11 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
-    params: { folder: 'umpdocs_cours', resource_type: 'raw' },
+    params: { 
+        folder: 'umpdocs_cours', 
+        resource_type: 'auto', // Laisse Cloudinary détecter automatiquement le type (PDF, image, etc.)
+        format: 'pdf' // Force Cloudinary à ajouter l'extension .pdf au lien
+    },
 });
 const upload = multer({ storage: storage });
 
