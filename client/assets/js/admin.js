@@ -8,10 +8,22 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
     statusDiv.innerHTML = '<p style="color: blue; margin-top: 15px;">⏳ Envoi en cours vers le serveur... Veuillez patienter, cela peut prendre quelques secondes.</p>';
     submitBtn.disabled = true;
 
-    // On prépare les données (Titre, Module, et le Fichier PDF)
+    // On prépare TOUTES les données pour la base de données
     const formData = new FormData();
     formData.append('title', document.getElementById('title').value);
+    
+    // Si tu as ces champs dans ton formulaire HTML, on les prend, sinon on met des valeurs par défaut pour éviter le crash
+    const categoryField = document.getElementById('category');
+    formData.append('category', categoryField ? categoryField.value : 'Cours');
+    
     formData.append('module', document.getElementById('module').value);
+    
+    const filiereField = document.getElementById('filiere');
+    formData.append('filiere', filiereField ? filiereField.value : 'Général');
+    
+    const semestreField = document.getElementById('semestre');
+    formData.append('semestre', semestreField ? semestreField.value : 'S1');
+    
     formData.append('file', document.getElementById('file').files[0]);
 
     try {
