@@ -16,10 +16,16 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
-    params: { 
-        folder: 'umpdocs_cours', 
-        resource_type: 'auto', // Laisse Cloudinary détecter automatiquement le type (PDF, image, etc.)
-        format: 'pdf' // Force Cloudinary à ajouter l'extension .pdf au lien
+    params: async (req, file) => {
+        // 1. On prend le nom original du fichier et on remplace les espaces par des tirets
+        const nomPropre = file.originalname.split('.')[0].replace(/[^a-zA-Z0-9]/g, "_");
+        
+        return {
+            folder: 'umpdocs_cours',
+            resource_type: 'raw', // On le garde en format brut
+            // 2. On force Cloudinary à créer un lien qui se termine PARFAITEMENT par .pdf !
+            public_id: `${nomPropre}_${Date.now()}.pdf`
+        };
     },
 });
 const upload = multer({ storage: storage });
