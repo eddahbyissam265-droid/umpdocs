@@ -84,7 +84,10 @@ router.post('/', upload.single('file'), async (req, res) => {
             return res.status(400).json({ error: "Le fichier n'a pas pu être traité." });
         }
 
-        const { title, category, module, filiere, semestre, option_pcp } = req.body;
+        const { title, module, option_pcp } = req.body;
+const category = req.body.category || 'Cours';
+const filiere = req.body.filiere || 'Général';
+const semestre = req.body.semestre || 'S1';
         const cheminFichier = req.file.path; 
         const optionFinal = option_pcp || '';
 
