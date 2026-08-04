@@ -115,9 +115,43 @@ router.post('/:id/download', async (req, res) => {
     res.status(200).json({ message: "Téléchargement comptabilisé !" });
 });
 
+// --- SUPPRESSION D'UN DOCUMENT ---
 router.delete('/:id', async (req, res) => {
-    await db.query("DELETE FROM documents WHERE id = $1", [req.params.id]);
-    res.status(200).json({ message: "Document supprimé !" });
+    try {
+        const documentId = req.params.id;
+
+        // 1. Récupérer le document pour avoir son lien Cloudinary
+        const { rows } = await db.query("SELECT file_path FROM documents WHERE id = $1", [documentId]);
+        
+        if (rows.length === 0) {
+            return res.status(404).json({ error: "Document introuvable." });
+        }
+
+        const document = rows[0];
+
+        // 2. Supprimer le fichier physiquement sur Cloudinary (si le lien existe)
+        if (document.file_path && document.file_path.includes('cloudinary')) {
+            // On extrait le nom exact du fichier depuis l'URL
+            const urlParts = document.file_path.split('/');
+            const nomFichierAvecExtension = urlParts[urlParts.length - 1];
+            const nomFichier = nomFichierAvecExtension.split('.')[0]; 
+            
+            // Le public_id dans Cloudinary inclut le nom du dossier : "umpdocs_cours/nomdufichier"
+            const publicId = `umpdocs_cours/${nomFichier}`;
+
+            // Ordre de destruction envoyé à Cloudinary
+            await cloudinary.uploader.destroy(publicId);
+        }
+
+        // 3. Supprimer la ligne de la base de données PostgreSQL
+        await db.query("DELETE FROM documents WHERE id = $1", [documentId]);
+        
+        res.status(200).json({ message: "Document et fichier Cloudinary supprimés avec succès !" });
+
+    } catch (error) {
+        console.error("❌ Erreur lors de la suppression :", error);
+        res.status(500).json({ error: "Erreur serveur lors de la suppression." });
+    }
 });
 
 // --- COMMENTAIRES ---
