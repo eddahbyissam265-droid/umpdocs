@@ -63,7 +63,16 @@
         <option value="">-- Sélectionnez d'abord une filière et un semestre --</option>
     </select>
 </div>
-
+<!-- NOUVEAU MENU : CATÉGORIE -->
+<div style="margin-bottom: 15px;">
+    <label for="category">Catégorie du document :</label>
+    <select id="category" name="category" required style="padding: 8px; width: 100%;">
+        <option value="Cours">Cours</option>
+        <option value="TD">TD / Exercices</option>
+        <option value="Examens">Examens / Contrôles</option>
+        <option value="Résumé">Résumé</option>
+    </select>
+</div>
 <label for="file">Fichier (PDF uniquement) :</label>
 <input type="file" id="file" accept=".pdf" required>
                 <button type="submit" class="btn-primary">Mettre en ligne</button>

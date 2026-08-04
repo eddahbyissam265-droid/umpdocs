@@ -148,7 +148,12 @@ async function chargerDocumentsAdmin() {
                 <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-radius: 5px; background-color: #f9f9f9;">
                     <div>
                         <h4 style="margin: 0 0 5px 0;">${doc.title}</h4>
-                        <small style="color: #555;">${doc.filiere} - ${doc.semestre} | <strong>${doc.module}</strong></small>
+                        <small style="color: #555;">
+    <span style="background: #007bff; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.85em; margin-right: 5px;">
+        ${doc.category}
+    </span>
+    ${doc.filiere} - ${doc.semestre} | <strong>${doc.module}</strong>
+</small>
                     </div>
                     <button onclick="supprimerDocument(${doc.id})" style="background-color: #dc3545; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 5px; font-weight: bold;">
                         Supprimer
