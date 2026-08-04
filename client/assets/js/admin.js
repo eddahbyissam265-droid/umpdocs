@@ -11,20 +11,15 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
     // On prépare TOUTES les données pour la base de données
     const formData = new FormData();
     formData.append('title', document.getElementById('title').value);
-    const filiere = document.getElementById('filiereAdmin').value;
-const semestre = document.getElementById('semestreAdmin').value;
-    
-    // Si tu as ces champs dans ton formulaire HTML, on les prend, sinon on met des valeurs par défaut pour éviter le crash
-    const categoryField = document.getElementById('category');
-    formData.append('category', categoryField ? categoryField.value : 'Cours');
-    
     formData.append('module', document.getElementById('module').value);
     
-    const filiereField = document.getElementById('filiere');
-    formData.append('filiere', filiereField ? filiereField.value : 'Général');
+    // 👇 ICI C'EST LA CORRECTION : On prend directement la valeur de tes nouveaux menus HTML
+    formData.append('filiere', document.getElementById('filiereAdmin').value);
+    formData.append('semestre', document.getElementById('semestreAdmin').value);
     
-    const semestreField = document.getElementById('semestre');
-    formData.append('semestre', semestreField ? semestreField.value : 'S1');
+    // Si tu as ces champs dans ton formulaire HTML, on les prend, sinon valeur par défaut
+    const categoryField = document.getElementById('category');
+    formData.append('category', categoryField ? categoryField.value : 'Cours');
     
     formData.append('file', document.getElementById('file').files[0]);
 
