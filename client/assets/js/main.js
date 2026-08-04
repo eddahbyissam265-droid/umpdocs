@@ -132,31 +132,38 @@ function updateModulesFilter() {
 // ==========================================
 // FILTRAGE DES DOCUMENTS
 // ==========================================
+// ==========================================
+// FILTRAGE DES DOCUMENTS (VERSION FLEXIBLE)
+// ==========================================
 function filtrerDocuments() {
-    const texteRecherche = document.getElementById('barreRecherche') ? document.getElementById('barreRecherche').value.toLowerCase() : "";
-    const choixFiliere = document.getElementById('filtreFiliere') ? document.getElementById('filtreFiliere').value : "";
-    const choixSemestre = document.getElementById('filtreSemestre') ? document.getElementById('filtreSemestre').value : "";
-    const choixCategorie = document.getElementById('filtreCategorie') ? document.getElementById('filtreCategorie').value : "";
+    const texteRecherche = document.getElementById('barreRecherche') ? document.getElementById('barreRecherche').value.toLowerCase().trim() : "";
+    const choixFiliere = document.getElementById('filtreFiliere') ? document.getElementById('filtreFiliere').value.trim() : "";
+    const choixSemestre = document.getElementById('filtreSemestre') ? document.getElementById('filtreSemestre').value.trim() : "";
+    const choixCategorie = document.getElementById('filtreCategorie') ? document.getElementById('filtreCategorie').value.trim() : "";
     
-    // Le nouveau filtre : Module
     const moduleSelect = document.getElementById('filtreModule');
-    const choixModule = moduleSelect ? moduleSelect.value : "";
+    const choixModule = moduleSelect ? moduleSelect.value.toLowerCase().trim() : "";
 
     const documentsFiltres = tousLesDocuments.filter(doc => {
-        const titre = doc.title ? doc.title.toLowerCase() : "";
-        const moduleDoc = doc.module ? doc.module.toLowerCase() : "";
+        const titre = doc.title ? doc.title.toLowerCase().trim() : "";
+        const moduleDoc = doc.module ? doc.module.toLowerCase().trim() : "";
+        const filiereDoc = doc.filiere ? doc.filiere.trim() : "";
+        const semestreDoc = doc.semestre ? doc.semestre.trim() : "";
+        const categorieDoc = doc.category ? doc.category.trim() : "";
 
-        const matchTexte = titre.includes(texteRecherche) || moduleDoc.includes(texteRecherche);
-        const matchFiliere = choixFiliere === "" || doc.filiere === choixFiliere;
-        const matchSemestre = choixSemestre === "" || doc.semestre === choixSemestre;
-        const matchCategorie = choixCategorie === "" || doc.category === choixCategorie;
+        // Vérifications assouplies
+        const matchTexte = texteRecherche === "" || titre.includes(texteRecherche) || moduleDoc.includes(texteRecherche);
+        const matchFiliere = choixFiliere === "" || filiereDoc === choixFiliere;
+        const matchSemestre = choixSemestre === "" || semestreDoc === choixSemestre;
+        const matchCategorie = choixCategorie === "" || categorieDoc === choixCategorie;
         
-        // Nouvelle règle de match pour le module précis !
-        const matchModule = choixModule === "" || doc.module === choixModule;
+        // Match tolérant pour le module (prend en compte minuscules/majuscules et espaces)
+        const matchModule = choixModule === "" || moduleDoc === choixModule || moduleDoc.includes(choixModule) || choixModule.includes(moduleDoc);
 
         return matchTexte && matchFiliere && matchSemestre && matchCategorie && matchModule;
     });
 
+    console.log("🔍 Résultat du filtre :", documentsFiltres.length, "document(s) trouvé(s).");
     afficherDocuments(documentsFiltres);
 }
 
