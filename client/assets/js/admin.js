@@ -32,6 +32,14 @@ const dataModules = {
         "S5": ["Physique statistique", "Mécanique quantique 2", "Physique nucléaire", "Mécanique analytique", "Electronique analogique avancée", "Innovation et gestion de projet", "Anglais"],
         "S6": ["Physique des matériaux", "Traitement de signal", "Automatique", "Systémes embarquées", "Electromagnétisme dans les milieux", "Mécanique des fluides", "Transfert thermique", "Elasticité et résistance des matériaux", "Transfert thermique et Mécanique des fluides", "Renewnable energy", "Efficacité énergetique", "Détection et mesure des rayonnements", "Initiation à l'imagerie médicale", "Radioprotection et Dosimétrie", "Culture entrepreunariale", "Anglais"]
     },
+    "EGC": {
+        "S1": ["Matière 1", "Matière 2"],
+        "S2": ["Matière 1", "Matière 2"],
+        "S3": ["Matière 1", "Matière 2"],
+        "S4": ["Matière 1", "Matière 2"],
+        "S5": ["Matière 1", "Matière 2"],
+        "S6": ["Matière 1", "Matière 2"]
+    },
     "Licence de Chimie PC-C": {
         "S1": ["Mécanique du point matériel", "Thermodynamique 1", "Thermochimie", "Atomistique", "Analyse 1", "Algèbre 1", "Méthodologie du Travail Universitaire"],
         "S2": ["Optique géométrique", "Electrostatique et Magnétostatique 1", "Liaisons chimiques", "Chimie en solution", "Analyse 2", "Algèbre 2", "Digital Skills"],
