@@ -35,7 +35,30 @@
 
                 <label for="file">Fichier (PDF uniquement) :</label>
                 <input type="file" id="file" accept=".pdf" required>
+                <div style="margin-bottom: 15px;">
+    <label for="filiereAdmin">Filière :</label>
+    <select id="filiereAdmin" name="filiere" required style="padding: 8px; width: 100%;">
+        <option value="SMA">SMA</option>
+        <option value="SMI">SMI</option>
+        <option value="SMP">SMP</option>
+        <option value="SMC">SMC</option>
+        <option value="IA">IA</option>
+        <option value="BCG">BCG</option>
+        <option value="Général">Général</option>
+    </select>
+</div>
 
+<div style="margin-bottom: 15px;">
+    <label for="semestreAdmin">Semestre :</label>
+    <select id="semestreAdmin" name="semestre" required style="padding: 8px; width: 100%;">
+        <option value="S1">S1</option>
+        <option value="S2">S2</option>
+        <option value="S3">S3</option>
+        <option value="S4">S4</option>
+        <option value="S5">S5</option>
+        <option value="S6">S6</option>
+    </select>
+</div>
                 <button type="submit" class="btn-primary">Mettre en ligne</button>
             </form>
             
