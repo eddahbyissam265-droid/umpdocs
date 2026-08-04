@@ -69,17 +69,11 @@ async function chargerDocuments() {
         console.error("🔴 ERREUR LORS DU CHARGEMENT :", erreur);
     }
 }
-
 function afficherDocuments(documents) {
     console.log("🟢 ÉTAPE 4 : Je prépare l'affichage de", documents.length, "documents.");
-    
     const container = document.getElementById('documents-container'); 
     
-    if (!container) {
-        console.error("🔴 ERREUR FATALE : Je ne trouve pas la balise avec l'ID 'documents-container' dans le HTML !");
-        return;
-    }
-    
+    if (!container) return;
     container.innerHTML = ''; 
 
     if (documents.length === 0) {
@@ -89,13 +83,35 @@ function afficherDocuments(documents) {
 
     documents.forEach(doc => {
         container.innerHTML += `
-            <div class="document-card" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; border-radius: 5px;">
+            <div class="document-card" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; border-radius: 5px; background: white;">
                 <h3>${doc.title}</h3>
                 <p><strong>Module :</strong> ${doc.module}</p>
                 <p><strong>Filière :</strong> ${doc.filiere} | <strong>Semestre :</strong> ${doc.semestre} | <strong>Catégorie :</strong> ${doc.category}</p>
-                <a href="${doc.file_path}" target="_blank" style="display: inline-block; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; margin-top: 10px;">
-                    Télécharger
+                
+                <a href="${doc.file_path}" target="_blank" style="display: inline-block; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; margin-top: 10px; margin-bottom: 15px;">
+                    📥 Télécharger
                 </a>
+                
+                <!-- NOUVEAU : SECTION COMMENTAIRES -->
+                <div style="border-top: 1px solid #eee; padding-top: 10px;">
+                    <button onclick="toggleCommentaires(${doc.id})" style="background: none; border: none; color: #6c757d; cursor: pointer; font-weight: bold; padding: 0;">
+                        💬 Voir / Ajouter un commentaire
+                    </button>
+                    
+                    <div id="zone-commentaires-${doc.id}" style="display: none; margin-top: 15px;">
+                        <div id="liste-commentaires-${doc.id}" style="max-height: 150px; overflow-y: auto; background: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 0.9em;">
+                            <!-- Les commentaires apparaîtront ici -->
+                        </div>
+                        
+                        <div style="display: flex; gap: 5px;">
+                            <input type="text" id="input-comment-${doc.id}" placeholder="Écrire un commentaire..." style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                            <button onclick="envoyerCommentaire(${doc.id})" style="background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">
+                                Envoyer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
         `;
     });
@@ -216,7 +232,77 @@ async function handleGoogleLogin(response) {
         console.error("🔴 Erreur système lors de la connexion :", erreur);
     }
 }
+// ==========================================
+// SYSTÈME DE COMMENTAIRES
+// ==========================================
 
+// 1. Afficher/Masquer la zone de commentaires
+async function toggleCommentaires(docId) {
+    const zone = document.getElementById(`zone-commentaires-${docId}`);
+    if (zone.style.display === "none") {
+        zone.style.display = "block";
+        await chargerCommentaires(docId); // On va chercher les commentaires dans la base
+    } else {
+        zone.style.display = "none";
+    }
+}
+
+// 2. Récupérer les commentaires depuis PostgreSQL
+async function chargerCommentaires(docId) {
+    const listeDiv = document.getElementById(`liste-commentaires-${docId}`);
+    listeDiv.innerHTML = "<p style='color: gray; margin: 0;'><em>Chargement...</em></p>";
+    
+    try {
+        const response = await fetch(`/api/documents/${docId}/comments`);
+        const commentaires = await response.json();
+        
+        if (commentaires.length === 0) {
+            listeDiv.innerHTML = "<p style='color: gray; margin: 0;'><em>Aucun commentaire. Soyez le premier !</em></p>";
+            return;
+        }
+        
+        listeDiv.innerHTML = commentaires.map(c => 
+            `<p style="margin: 0 0 8px 0; border-bottom: 1px solid #e9ecef; padding-bottom: 5px;">
+                <strong>👤 ${c.author}</strong> : ${c.content}
+            </p>`
+        ).join('');
+        
+    } catch (erreur) {
+        listeDiv.innerHTML = "<p style='color: red; margin: 0;'>❌ Erreur de chargement.</p>";
+    }
+}
+
+// 3. Envoyer un nouveau commentaire
+async function envoyerCommentaire(docId) {
+    // On vérifie si l'étudiant est bien connecté avec Google
+    const userName = sessionStorage.getItem('userName');
+    if (!userName) {
+        alert("⚠️ Vous devez être connecté avec Google pour pouvoir laisser un commentaire !");
+        return;
+    }
+    
+    const inputField = document.getElementById(`input-comment-${docId}`);
+    const contenu = inputField.value.trim();
+    
+    if (contenu === "") return; // On n'envoie pas un commentaire vide
+    
+    try {
+        const response = await fetch(`/api/documents/${docId}/comments`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ author: userName, content: contenu })
+        });
+        
+        if (response.ok) {
+            inputField.value = ""; // On vide la case
+            await chargerCommentaires(docId); // On met à jour la liste instantanément
+        } else {
+            alert("❌ Erreur lors de l'envoi du commentaire.");
+        }
+    } catch (erreur) {
+        console.error("Erreur d'envoi:", erreur);
+    }
+}
 // Fonction pour modifier l'affichage quand on est connecté
 function afficherUtilisateur(nom) {
     const zoneUser = document.getElementById('zoneUtilisateur');
