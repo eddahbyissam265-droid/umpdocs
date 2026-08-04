@@ -27,30 +27,25 @@
             <p>Remplissez les informations ci-dessous pour mettre en ligne un nouveau cours.</p>
             
             <form id="uploadForm">
-                <label for="title">Titre du document :</label>
-                <input type="text" id="title" required placeholder="Ex: Résumé Algèbre 1">
+               <label for="title">Titre du document :</label>
+<input type="text" id="title" required placeholder="Ex: Résumé Algèbre 1">
 
-                <label for="module">Module ou Matière :</label>
-                <input type="text" id="module" required placeholder="Ex: Mathématiques">
-
-                <label for="file">Fichier (PDF uniquement) :</label>
-                <input type="file" id="file" accept=".pdf" required>
-                <div style="margin-bottom: 15px;">
+<div style="margin-bottom: 15px; margin-top: 15px;">
     <label for="filiereAdmin">Filière :</label>
     <select id="filiereAdmin" name="filiere" required style="padding: 8px; width: 100%;">
-        <option value="SMA">SMA</option>
-        <option value="SMI">SMI</option>
-        <option value="SMP">SMP</option>
-        <option value="SMC">SMC</option>
-        <option value="IA">IA</option>
-        <option value="BCG">BCG</option>
-        <option value="Général">Général</option>
+        <option value="">-- Choisissez une filière --</option>
+        <option value="MIP Math">MIP Math</option>
+        <option value="MIP Informatique">MIP Informatique</option>
+        <option value="TC Informatiques Appliquées">TC Informatiques Appliquées</option>
+        <option value="Licence de Physique PC-P">Licence de Physique PC-P</option>
+        <option value="Licence de Chimie PC-C">Licence de Chimie PC-C</option>
     </select>
 </div>
 
 <div style="margin-bottom: 15px;">
     <label for="semestreAdmin">Semestre :</label>
     <select id="semestreAdmin" name="semestre" required style="padding: 8px; width: 100%;">
+        <option value="">-- Choisissez un semestre --</option>
         <option value="S1">S1</option>
         <option value="S2">S2</option>
         <option value="S3">S3</option>
@@ -59,6 +54,17 @@
         <option value="S6">S6</option>
     </select>
 </div>
+
+<!-- LE NOUVEAU MENU MODULE INTELLIGENT -->
+<div style="margin-bottom: 15px;">
+    <label for="module">Module ou Matière :</label>
+    <select id="module" name="module" required style="padding: 8px; width: 100%;">
+        <option value="">-- Sélectionnez d'abord une filière et un semestre --</option>
+    </select>
+</div>
+
+<label for="file">Fichier (PDF uniquement) :</label>
+<input type="file" id="file" accept=".pdf" required>
                 <button type="submit" class="btn-primary">Mettre en ligne</button>
                 <div id="uploadStatus"></div>
             </form>
