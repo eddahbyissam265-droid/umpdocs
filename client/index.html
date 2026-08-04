@@ -39,48 +39,47 @@
         <section class="documents-section">
             <h2>Documents Disponibles</h2>
             <!-- ZONE DE RECHERCHE ET FILTRES -->
-<div class="recherche-container" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+<div class="recherche-container" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
     
-    <!-- Barre de texte -->
-    <input type="text" id="barreRecherche" placeholder="Chercher un module, un titre..." style="padding: 8px; flex: 1; min-width: 200px;">
+    <!-- L'UNIQUE barre de recherche -->
+    <input type="text" id="barreRecherche" placeholder="🔍 Chercher un module, un titre..." style="padding: 8px; flex: 1; min-width: 200px; border-radius: 5px; border: 1px solid #ccc;">
     
     <!-- Filtre Filière -->
-    <!-- Filtre Filière -->
-<!-- Filtre Filière -->
-<select id="filtreFiliere" style="padding: 8px; margin-right: 10px; margin-bottom: 10px;">
-    <option value="">Toutes les filières</option>
-    <option value="MIP Math">MIP Math</option>
-    <option value="MIP Informatique">MIP Informatique</option>
-    <option value="TC Informatiques Appliquées">TC Informatiques Appliquées</option>
-    <option value="Licence de Physique PC-P">Licence de Physique PC-P</option>
-    <option value="Licence de Chimie PC-C">Licence de Chimie PC-C</option>
-    <option value="EGC">EGC</option>
-</select>
-
-<!-- Filtre Semestre -->
-<select id="filtreSemestre" style="padding: 8px; margin-right: 10px; margin-bottom: 10px;">
-    <option value="">Tous les semestres</option>
-    <option value="S1">S1</option>
-    <option value="S2">S2</option>
-    <option value="S3">S3</option>
-    <option value="S4">S4</option>
-    <option value="S5">S5</option>
-    <option value="S6">S6</option>
-</select>
-
-<!-- Nouveau Filtre Module -->
-<select id="filtreModule" style="padding: 8px; margin-bottom: 10px;">
-    <option value="">Tous les modules</option>
-</select>
-
-    <!-- Filtre Catégorie -->
-    <select id="filtreCategorie" style="padding: 8px;">
-        <option value="">Toutes les catégories</option>
-        <option value="Cours">Cours</option>
-        <option value="TD">TD</option>
-        <option value="Examens">Examens</option>
+    <select id="filtreFiliere" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+        <option value="">Toutes les filières</option>
+        <option value="MIP Math">MIP Math</option>
+        <option value="MIP Informatique">MIP Informatique</option>
+        <option value="TC Informatiques Appliquées">TC Informatiques Appliquées</option>
+        <option value="Licence de Physique PC-P">Licence de Physique PC-P</option>
+        <option value="Licence de Chimie PC-C">Licence de Chimie PC-C</option>
+        <option value="EGC">EGC</option>
     </select>
 
+    <!-- Filtre Semestre -->
+    <select id="filtreSemestre" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+        <option value="">Tous les semestres</option>
+        <option value="S1">S1</option>
+        <option value="S2">S2</option>
+        <option value="S3">S3</option>
+        <option value="S4">S4</option>
+        <option value="S5">S5</option>
+        <option value="S6">S6</option>
+    </select>
+
+    <!-- Filtre Module intelligent -->
+    <select id="filtreModule" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+        <option value="">Tous les modules</option>
+    </select>
+
+    <!-- Filtre Catégorie (CELUI QUE J'AVAIS OUBLIÉ ! 😅) -->
+    <select id="filtreCategorie" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+        <option value="">Toutes les catégories</option>
+        <option value="Cours">Cours</option>
+        <option value="TD">TD / Exercices</option>
+        <option value="Examens">Examens / Contrôles</option>
+        <option value="Résumé">Résumé</option>
+    </select>
+    
 </div>
             <div id="documents-container" class="documents-grid">
                 <!-- Les cartes de documents seront ajoutées dynamiquement ici par main.js -->
