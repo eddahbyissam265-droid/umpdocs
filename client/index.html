@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UMPDocs - Vos cours et documents en ligne</title>
     <link rel="stylesheet" href="assets/css/main.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -18,6 +19,26 @@
             <a href="index.html" class="active">Accueil</a>
             <a href="admin.html">Espace Admin</a>
         </nav>
+        <div id="zoneUtilisateur" style="text-align: right; margin-bottom: 20px;">
+    <!-- Le moteur de connexion Google -->
+    <div id="g_id_onload"
+         data-client_id="265258547962-3l1s0l3ep99tg6ej2bk1ovgc78962euc.apps.googleusercontent.com"
+         data-context="signin"
+         data-ux_mode="popup"
+         data-callback="handleGoogleLogin"
+         data-auto_prompt="false">
+    </div>
+    
+    <!-- L'affichage visuel du bouton -->
+    <div class="g_id_signin"
+         data-type="standard"
+         data-shape="rectangular"
+         data-theme="outline"
+         data-text="signin_with"
+         data-size="large"
+         data-logo_alignment="left">
+    </div>
+</div>
     </header>
 
     <!-- Conteneur Principal -->

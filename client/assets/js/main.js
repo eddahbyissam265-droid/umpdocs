@@ -182,3 +182,64 @@ if(document.getElementById('filtreModule')) document.getElementById('filtreModul
 
 // Démarrage
 chargerDocuments();
+// ==========================================
+// SYSTÈME DE CONNEXION GOOGLE
+// ==========================================
+async function handleGoogleLogin(response) {
+    const jetonGoogle = response.credential;
+    console.log("🟢 Jeton reçu de Google ! Envoi au serveur...");
+
+    try {
+        // Attention à l'URL : on suppose que tes routes sont montées sur /api/documents
+        const res = await fetch('/api/documents/auth/google', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ credential: jetonGoogle })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            console.log("✅ Connexion réussie :", data);
+            
+            // On sauvegarde le nom de l'utilisateur dans le navigateur
+            sessionStorage.setItem('userName', data.pseudo);
+            
+            // On met à jour l'affichage
+            afficherUtilisateur(data.pseudo);
+        } else {
+            alert("❌ Erreur de connexion : " + data.erreur);
+        }
+    } catch (erreur) {
+        console.error("🔴 Erreur système lors de la connexion :", erreur);
+    }
+}
+
+// Fonction pour modifier l'affichage quand on est connecté
+function afficherUtilisateur(nom) {
+    const zoneUser = document.getElementById('zoneUtilisateur');
+    if (zoneUser) {
+        zoneUser.innerHTML = `
+            <div style="background: #eef2f5; padding: 10px; border-radius: 5px; display: inline-block;">
+                👤 Bienvenue, <strong>${nom}</strong> ! 
+                <button onclick="deconnexion()" style="margin-left: 10px; border: none; background: #dc3545; color: white; padding: 5px 10px; border-radius: 3px; cursor: pointer;">Déconnexion</button>
+            </div>
+        `;
+    }
+}
+
+// Fonction de déconnexion
+function deconnexion() {
+    sessionStorage.removeItem('userName');
+    location.reload(); // On recharge la page pour faire réapparaître le bouton Google
+}
+
+// Vérifier si on est déjà connecté au chargement de la page
+window.addEventListener('load', () => {
+    const nomSauvegarde = sessionStorage.getItem('userName');
+    if (nomSauvegarde) {
+        afficherUtilisateur(nomSauvegarde);
+    }
+});
