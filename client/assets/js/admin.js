@@ -120,3 +120,73 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
         submitBtn.disabled = false; // On débloque le bouton
     }
 });
+// =========================================================
+// SECTION : GESTION ET SUPPRESSION DES DOCUMENTS
+// =========================================================
+
+// 1. Fonction pour charger et afficher les documents dans l'Admin
+async function chargerDocumentsAdmin() {
+    const container = document.getElementById('admin-documents-list');
+    
+    // Si la zone d'affichage n'existe pas sur cette page, on arrête la fonction pour éviter une erreur
+    if (!container) return; 
+
+    try {
+        const response = await fetch('/api/documents');
+        const documents = await response.json();
+
+        container.innerHTML = ''; // On vide le texte de chargement
+
+        if (documents.length === 0) {
+            container.innerHTML = '<p>Aucun document en ligne pour le moment.</p>';
+            return;
+        }
+
+        // On crée une carte avec un bouton Supprimer pour chaque document
+        documents.forEach(doc => {
+            container.innerHTML += `
+                <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-radius: 5px; background-color: #f9f9f9;">
+                    <div>
+                        <h4 style="margin: 0 0 5px 0;">${doc.title}</h4>
+                        <small style="color: #555;">${doc.filiere} - ${doc.semestre} | <strong>${doc.module}</strong></small>
+                    </div>
+                    <button onclick="supprimerDocument(${doc.id})" style="background-color: #dc3545; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 5px; font-weight: bold;">
+                        Supprimer
+                    </button>
+                </div>
+            `;
+        });
+    } catch (error) {
+        console.error('Erreur:', error);
+        container.innerHTML = '<p style="color: red;">❌ Erreur lors du chargement des documents.</p>';
+    }
+}
+
+// 2. Fonction qui s'active quand on clique sur "Supprimer"
+async function supprimerDocument(idDocument) {
+    // On demande une petite confirmation pour éviter les erreurs de clic
+    if (!confirm("Es-tu sûr de vouloir supprimer ce document définitivement ?")) {
+        return; 
+    }
+
+    try {
+        // On envoie l'ordre de suppression au serveur
+        const response = await fetch(`/api/documents/${idDocument}`, {
+            method: 'DELETE'
+        });
+
+        if (response.ok) {
+            alert("✅ Document supprimé avec succès !");
+            chargerDocumentsAdmin(); // On rafraîchit la liste automatiquement
+        } else {
+            const errorData = await response.json();
+            alert(`❌ Erreur : ${errorData.error || 'Impossible de supprimer'}`);
+        }
+    } catch (error) {
+        console.error('Erreur:', error);
+        alert("❌ Erreur de connexion avec le serveur.");
+    }
+}
+
+// 3. On lance le chargement dès qu'on ouvre la page
+chargerDocumentsAdmin();
