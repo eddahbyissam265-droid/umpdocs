@@ -33,12 +33,12 @@ const dataModules = {
         "S6": ["Physique des matériaux", "Traitement de signal", "Automatique", "Systémes embarquées", "Electromagnétisme dans les milieux", "Mécanique des fluides", "Transfert thermique", "Elasticité et résistance des matériaux", "Transfert thermique et Mécanique des fluides", "Renewnable energy", "Efficacité énergetique", "Détection et mesure des rayonnements", "Initiation à l'imagerie médicale", "Radioprotection et Dosimétrie", "Culture entrepreunariale", "Anglais"]
     },
     "EGC": {
-        "S1": ["Matière 1", "Matière 2"],
-        "S2": ["Matière 1", "Matière 2"],
-        "S3": ["Matière 1", "Matière 2"],
-        "S4": ["Matière 1", "Matière 2"],
-        "S5": ["Matière 1", "Matière 2"],
-        "S6": ["Matière 1", "Matière 2"]
+        "S1": ["Biologie Cellulaire et Histologie", "Geologie Generale", "Atomistique et Liaison Chimique", "Physique 1 Thermodynamique Mecanique", "Mathematiques", "Langues etrangeres", "Methodologie de Travail Universitaire"],
+        "S2": ["Biologie des organismes Veg et ani", "Geodynamique interne et externe", "Chimie en solution et Initiation a la Chimie organique", "Physique 2 Optique Electricite", "Informatique (Algorithmique et Programmation en Python)", "Langues etrangeres", "Digital Skills"],
+        "S3": ["Modules S3 à ajouter..."],
+        "S4": ["Modules S4 à ajouter..."],
+        "S5": ["Metre et pathologie du batiment", "Beton arme", "Trace Routier", "Hydrologie", "Hydraulique urbaine", "Geophysique", "Anglais", "Innovation"],
+        "S6": ["Modules S6 à ajouter..."]
     },
     "Licence de Chimie PC-C": {
         "S1": ["Mécanique du point matériel", "Thermodynamique 1", "Thermochimie", "Atomistique", "Analyse 1", "Algèbre 1", "Méthodologie du Travail Universitaire"],
