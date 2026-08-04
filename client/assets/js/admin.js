@@ -1,3 +1,11 @@
+// Demande le mot de passe à l'ouverture de la page et le mémorise
+const adminPassword = sessionStorage.getItem('adminPassword') || prompt("🔒 Veuillez entrer le mot de passe administrateur pour accéder à cette page :");
+
+if (adminPassword) {
+    sessionStorage.setItem('adminPassword', adminPassword);
+} else {
+    alert("⚠️ Vous naviguez en mode visiteur. Vous ne pourrez pas modifier la base de données.");
+}
 // Dictionnaire complet des filières, semestres et modules
 const dataModules = {
     "MIP Math": {
@@ -103,6 +111,9 @@ document.getElementById('uploadForm').addEventListener('submit', async (e) => {
         // On envoie tout à ton serveur Node.js
         const response = await fetch('/api/documents', {
             method: 'POST',
+            headers: {
+                'x-admin-password': adminPassword // 👈 On montre patte blanche au serveur
+            },
             body: formData
         });
 
@@ -177,7 +188,10 @@ async function supprimerDocument(idDocument) {
     try {
         // On envoie l'ordre de suppression au serveur
         const response = await fetch(`/api/documents/${idDocument}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'x-admin-password': adminPassword // 👈 On montre patte blanche au serveur
+            }
         });
 
         if (response.ok) {

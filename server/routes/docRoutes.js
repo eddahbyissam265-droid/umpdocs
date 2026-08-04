@@ -68,6 +68,22 @@ router.post('/auth/login', async (req, res) => {
     if (rows.length === 0) return res.status(401).json({ erreur: "Email ou mot de passe incorrect." });
     res.status(200).json({ message: "Connexion réussie", pseudo: rows[0].pseudo });
 });
+// ==========================================
+// VIGILE DE SÉCURITÉ ADMIN
+// ==========================================
+const verifierAdmin = (req, res, next) => {
+    const motDePasse = req.headers['x-admin-password'];
+    
+    // 🔒 CHANGER LE MOT DE PASSE ICI :
+    const vraiMotDePasse = "Oujda2026!"; // Tu peux mettre le mot de passe que tu veux
+    
+    if (motDePasse === vraiMotDePasse) {
+        next(); // Le mot de passe est bon, on laisse passer
+    } else {
+        res.status(403).json({ error: "🔒 Accès refusé : Mot de passe administrateur incorrect." });
+    }
+};
+
 
 // --- DOCUMENTS ---
 router.get('/', async (req, res) => {
@@ -80,7 +96,7 @@ router.get('/', async (req, res) => {
 });
 
 // 🚨 LE BLOC CORRIGÉ AVEC LE MOUCHARD 🚨
-router.post('/', upload.single('file'), async (req, res) => {
+router.post('/',verifierAdmin ,upload.single('file'), async (req, res) => {
     try {
         // 1. Vérification du fichier
         if (!req.file) {
@@ -116,7 +132,7 @@ router.post('/:id/download', async (req, res) => {
 });
 
 // --- SUPPRESSION D'UN DOCUMENT ---
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',verifierAdmin ,async (req, res) => {
     try {
         const documentId = req.params.id;
 
