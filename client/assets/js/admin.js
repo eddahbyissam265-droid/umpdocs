@@ -67,7 +67,19 @@ const dataModules = {
     },
     "CRMEF": {
         "Aucun": ["Analyse", "Algèbre", "Électricité", "Électronique", "Mécanique", "Thermodynamique", "Optique", "Informatique Générale", "Sujet Complet"]
-    }
+    },
+    // ==========================================
+    // NOUVEAU : MODULES POUR LA BIBLIOTHÈQUE
+    // ==========================================
+    "Livre Math": {
+        "Aucun": ["Analyse", "Algèbre", "Probabilités", "Topologie", "Recherche Opérationnelle", "Ouvrage Général"]
+    },
+    "Livre Physique": {
+        "Aucun": ["Mécanique", "Thermodynamique", "Électromagnétisme", "Optique", "Physique Quantique", "Ouvrage Général"]
+    },
+    "Livre Info": {
+        "Aucun": ["Algorithmique", "Programmation (C, Python, Java...)", "Bases de données", "Réseaux", "Intelligence Artificielle", "Ouvrage Général"]
+    },
 };
 
 // Fonction pour mettre à jour les modules
