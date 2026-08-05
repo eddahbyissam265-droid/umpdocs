@@ -60,40 +60,45 @@ async function chargerDocuments() {
     console.log("🟢 ÉTAPE 2 : Je demande les documents au serveur...");
     try {
         const response = await fetch('/api/documents');
-        tousLesDocuments = await response.json();
+        // On récupère TOUS les documents de la base de données
+        const tousLesDocuments = await response.json();
         
         console.log("🟢 ÉTAPE 3 : J'ai reçu la réponse du serveur. Voici les données :", tousLesDocuments);
         
-        // =========================================================
-        // 🌟 NOUVEAU : REMPLISSAGE AUTOMATIQUE DES CARTES CONCOURS
-        // =========================================================
+        // On prépare nos boîtes pour les concours
         const boxMaster = document.getElementById('liste-masters');
         const boxIngenieur = document.getElementById('liste-ingenieurs');
         const boxCrmef = document.getElementById('liste-crmef');
         
-        // On vide le texte par défaut ("Aucun document...") s'il y a des boîtes sur cette page
         if (boxMaster) boxMaster.innerHTML = '';
         if (boxIngenieur) boxIngenieur.innerHTML = '';
         if (boxCrmef) boxCrmef.innerHTML = '';
 
+        // 🌟 NOUVEAU : On crée un "panier" vide pour les documents normaux
+        const documentsOrdinaires = [];
+
         tousLesDocuments.forEach(doc => {
-            // Si le document est un concours, on le met dans sa petite boîte spéciale
+            // Si le document est un CONCOURS, on le met dans sa boîte spéciale
             if (doc.categorie === "Concours") {
                 const lienHTML = `<a href="${doc.lien}" target="_blank" style="background-color: #f8f9fa; color: #333; text-align: left; padding: 10px; border-radius: 5px; text-decoration: none; font-weight: bold; border-left: 4px solid #6f42c1; display: block; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: 0.2s; font-size: 0.9em;">📄 ${doc.module}</a>`;
 
                 if (doc.filiere === "Master" && boxMaster) {
                     boxMaster.innerHTML += lienHTML;
                 } else if (doc.filiere === "Ingenieur" && boxIngenieur) {
-                    boxIngenieur.innerHTML += lienHTML.replace('#6f42c1', '#fd7e14'); // Change en orange
+                    boxIngenieur.innerHTML += lienHTML.replace('#6f42c1', '#fd7e14'); // Orange
                 } else if (doc.filiere === "CRMEF" && boxCrmef) {
-                    boxCrmef.innerHTML += lienHTML.replace('#6f42c1', '#20c997'); // Change en vert
+                    boxCrmef.innerHTML += lienHTML.replace('#6f42c1', '#20c997'); // Vert
                 }
+            } 
+            // Si ce N'EST PAS un concours, on le garde dans notre panier de documents ordinaires
+            else {
+                documentsOrdinaires.push(doc);
             }
         });
-        // =========================================================
 
-        // Ensuite, on affiche la liste complète (cours, TD, concours...) dans l'accueil
-        afficherDocuments(tousLesDocuments); 
+        // 🌟 On donne UNIQUEMENT les documents ordinaires à la fonction d'affichage principale !
+        afficherDocuments(documentsOrdinaires); 
+        
     } catch (erreur) {
         console.error("🔴 ERREUR LORS DU CHARGEMENT :", erreur);
     }
