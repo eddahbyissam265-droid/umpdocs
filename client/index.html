@@ -243,6 +243,9 @@
 <!-- ========================================== -->
 <!-- SECTION : CONCOURS & MASTERS               -->
 <!-- ========================================== -->
+<!-- ========================================== -->
+<!-- SECTION : CONCOURS & MASTERS (DYNAMIQUE)   -->
+<!-- ========================================== -->
 <section id="concours" style="padding: 30px 20px; background-color: #f8f9fa; border-top: 1px solid #e9ecef; margin-bottom: 40px;">
     
     <div style="text-align: center; margin-bottom: 30px;">
@@ -250,42 +253,43 @@
         <p style="color: #6c757d; font-size: 1.1em; max-width: 800px; margin: 0 auto;">Accédez aux annales, sujets corrigés et informations pour réussir vos concours d'accès aux Grandes Écoles et Cycles Master.</p>
     </div>
     
-    <!-- Grille des concours -->
     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto;">
         
         <!-- Carte 1 : Masters -->
-        <div style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s; border-top: 4px solid #6f42c1;">
+        <div style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 4px solid #6f42c1;">
             <div style="padding: 20px;">
                 <div style="font-size: 2.5em; margin-bottom: 10px;">🎓</div>
                 <h3 style="margin: 0 0 10px 0; color: #333;">Masters de la Faculté</h3>
-                <p style="color: #666; font-size: 0.9em; min-height: 60px;">Exemples de concours écrits des années précédentes pour les Masters Informatique, Mathématiques, Physique et Chimie.</p>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <a href="#" target="_blank" style="background-color: #f8f9fa; color: #6f42c1; text-align: center; padding: 8px; border-radius: 5px; text-decoration: none; font-weight: bold; border: 1px solid #6f42c1; transition: 0.2s;">📄 Sujets Informatique</a>
-                    <a href="#" target="_blank" style="background-color: #f8f9fa; color: #6f42c1; text-align: center; padding: 8px; border-radius: 5px; text-decoration: none; font-weight: bold; border: 1px solid #6f42c1; transition: 0.2s;">📄 Sujets Maths / Physique</a>
+                <p style="color: #666; font-size: 0.9em; min-height: 60px;">Exemples de concours écrits des années précédentes.</p>
+                <!-- La boîte magique pour les Masters -->
+                <div id="liste-masters" style="display: flex; flex-direction: column; gap: 8px;">
+                    <p style="color: #999; font-size: 0.8em; text-align: center;">Aucun document pour le moment...</p>
                 </div>
             </div>
         </div>
 
         <!-- Carte 2 : Écoles d'Ingénieurs -->
-        <div style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s; border-top: 4px solid #fd7e14;">
+        <div style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 4px solid #fd7e14;">
             <div style="padding: 20px;">
                 <div style="font-size: 2.5em; margin-bottom: 10px;">🚀</div>
                 <h3 style="margin: 0 0 10px 0; color: #333;">Écoles d'Ingénieurs</h3>
-                <p style="color: #666; font-size: 0.9em; min-height: 60px;">Concours nationaux, CNC, ENSA, ENSAM et concours d'accès parallèles (Passerelles) pour les titulaires d'un DEUG ou d'une Licence.</p>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <a href="#" target="_blank" style="background-color: #f8f9fa; color: #fd7e14; text-align: center; padding: 8px; border-radius: 5px; text-decoration: none; font-weight: bold; border: 1px solid #fd7e14; transition: 0.2s;">📂 Voir les Annales (ENSA/ENSAM)</a>
+                <p style="color: #666; font-size: 0.9em; min-height: 60px;">Concours nationaux, CNC, ENSA, ENSAM et Passerelles.</p>
+                <!-- La boîte magique pour les Ingénieurs -->
+                <div id="liste-ingenieurs" style="display: flex; flex-direction: column; gap: 8px;">
+                    <p style="color: #999; font-size: 0.8em; text-align: center;">Aucun document pour le moment...</p>
                 </div>
             </div>
         </div>
 
         <!-- Carte 3 : Enseignement & Autres -->
-        <div style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); transition: transform 0.3s; border-top: 4px solid #20c997;">
+        <div style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 4px solid #20c997;">
             <div style="padding: 20px;">
                 <div style="font-size: 2.5em; margin-bottom: 10px;">👨‍🏫</div>
                 <h3 style="margin: 0 0 10px 0; color: #333;">Métiers de l'Enseignement</h3>
-                <p style="color: #666; font-size: 0.9em; min-height: 60px;">Sujets des concours d'accès aux Centres Régionaux (CRMEF) et autres concours de la fonction publique (Ministère, etc.).</p>
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <a href="#" target="_blank" style="background-color: #f8f9fa; color: #20c997; text-align: center; padding: 8px; border-radius: 5px; text-decoration: none; font-weight: bold; border: 1px solid #20c997; transition: 0.2s;">📂 Sujets CRMEF & Divers</a>
+                <p style="color: #666; font-size: 0.9em; min-height: 60px;">Sujets d'accès aux Centres Régionaux (CRMEF).</p>
+                <!-- La boîte magique pour le CRMEF -->
+                <div id="liste-crmef" style="display: flex; flex-direction: column; gap: 8px;">
+                    <p style="color: #999; font-size: 0.8em; text-align: center;">Aucun document pour le moment...</p>
                 </div>
             </div>
         </div>
