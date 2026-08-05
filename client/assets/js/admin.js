@@ -55,6 +55,18 @@ const dataModules = {
         "S4": ["Chimie organique Fonctionnelle", "Cristallographie & Cristallochimie", "Techniques d'analyse", "Thermodynamique chimique", "Probabilités et statistiques", "Langues étrangères", "Soft Skills"],
         "S5": ["Chimie organique Fonctionnelle", "Chimie quantique et Modélisation", "Chimie du Solide et méthodes de caractérisation", "Cinétique chimique et Catalyse", "Electrochimie", "Innovation et gestion de projet", "Anglais"],
         "S6": ["Chimie des hétérocycles", "Produits Naturels", "Grandes réactions en chimie organique (Anglais)", "Chimie Macromoléculaire", "Techniques chromatographique Instrumentales", "Culture entrepreunariale", "Anglais"]
+    },
+    // ==========================================
+    // NOUVEAU : MODULES SPÉCIFIQUES AUX CONCOURS
+    // ==========================================
+    "Master": {
+        "Aucun": ["Analyse", "Algèbre", "Électricité", "Électronique", "Mécanique", "Thermodynamique", "Optique", "Informatique Générale", "Sujet Complet"]
+    },
+    "Ingenieur": {
+        "Aucun": ["Analyse", "Algèbre", "Électricité", "Électronique", "Mécanique", "Thermodynamique", "Optique", "Informatique Générale", "Sujet Complet"]
+    },
+    "CRMEF": {
+        "Aucun": ["Analyse", "Algèbre", "Électricité", "Électronique", "Mécanique", "Thermodynamique", "Optique", "Informatique Générale", "Sujet Complet"]
     }
 };
 
