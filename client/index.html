@@ -4,24 +4,74 @@
     <meta charset="UTF-8">
     <!-- BALISE VITALE POUR LE RESPONSIVE MOBILE -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FSdocs - Les cours de la Faculté</title>
+    <title>🎓 FSdocs - Les cours de la Faculté</title>
     <link rel="stylesheet" href="assets/css/main.css">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <!-- ========================================== -->
+    <!-- STYLE POUR LA BARRE DE NAVIGATION (MOBILE) -->
+    <!-- ========================================== -->
+    <style>
+        .fsdocs-navbar {
+            background-color: #2c3e50;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            gap: 20px;
+        }
+        .fsdocs-boutons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .fsdocs-boutons a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 4px;
+            white-space: nowrap;
+            transition: background-color 0.3s;
+        }
+        .fsdocs-boutons a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        .zone-google {
+            text-align: right; 
+            color: black; 
+            white-space: nowrap;
+        }
+        
+        /* MAGIE POUR LE MOBILE */
+        @media (max-width: 768px) {
+            .fsdocs-navbar {
+                flex-direction: column;
+                padding: 15px 10px;
+                gap: 15px;
+            }
+            .fsdocs-boutons {
+                gap: 8px;
+            }
+            .zone-google {
+                text-align: center;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
+
 <!-- ========================================== -->
 <!-- BARRE DE NAVIGATION (MENU PRINCIPAL)       -->
 <!-- ========================================== -->
-<!-- ========================================== -->
-<!-- BARRE DE NAVIGATION (MENU PRINCIPAL UNIQUE)-->
-<!-- ========================================== -->
-<!-- ========================================== -->
-<!-- BARRE DE NAVIGATION (MENU PRINCIPAL UNIQUE)-->
-<!-- ========================================== -->
-<!-- ========================================== -->
-<!-- BARRE DE NAVIGATION (MENU PRINCIPAL)       -->
-<!-- ========================================== -->
-<nav style="background-color: #2c3e50; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; color: white; margin-bottom: 40px; flex-wrap: wrap; gap: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+<nav class="fsdocs-navbar">
     
     <!-- 1. Logo (À gauche) -->
     <div style="font-weight: bold; font-size: 1.5em; white-space: nowrap;">
@@ -29,29 +79,17 @@
     </div>
     
     <!-- 2. Les Boutons (Au centre) -->
-    <div style="display: flex; gap: 15px; align-items: center; justify-content: center; flex-wrap: wrap;">
-        <a href="index.html" style="color: white; text-decoration: none; font-weight: 500; padding: 8px 12px; border-radius: 4px; background-color: rgba(255,255,255,0.2); transition: 0.3s; white-space: nowrap;">
-            🏠 Accueil
-        </a>
-        <a href="#bibliotheque" style="color: white; text-decoration: none; font-weight: 500; padding: 8px 12px; border-radius: 4px; white-space: nowrap;">
-            📚 Bibliothèque
-        </a>
-        <a href="#annonces" style="color: white; text-decoration: none; font-weight: 500; padding: 8px 12px; border-radius: 4px; white-space: nowrap;">
-            📢 Annonces
-        </a>
-        <a href="#concours" style="color: white; text-decoration: none; font-weight: 500; padding: 8px 12px; border-radius: 4px; white-space: nowrap;">
-            🏆 Concours
-        </a>
-        <a href="admin.html" style="color: #ffc107; text-decoration: none; font-weight: bold; padding: 8px 12px; border-radius: 4px; white-space: nowrap;">
-            ⚙️ Espace Admin
-        </a>
-        <a href="#contact" style="color: white; text-decoration: none; font-weight: 500; padding: 8px 12px; border-radius: 4px; white-space: nowrap;">
-            ✉️ Contact
-        </a>
+    <div class="fsdocs-boutons">
+        <a href="index.html" style="background-color: rgba(255,255,255,0.2);">🏠 Accueil</a>
+        <a href="#bibliotheque">📚 Bibliothèque</a>
+        <a href="#annonces">📢 Annonces</a>
+        <a href="#concours">🏆 Concours</a>
+        <a href="admin.html" style="color: #ffc107; font-weight: bold;">⚙️ Espace Admin</a>
+        <a href="#contact">✉️ Contact</a>
     </div>
 
     <!-- 3. Zone Utilisateur (À droite) -->
-    <div id="zoneUtilisateur" style="text-align: right; white-space: nowrap; color: black;">
+    <div id="zoneUtilisateur" class="zone-google">
         <!-- Le moteur de connexion Google -->
         <div id="g_id_onload"
              data-client_id="265258547962-3l1s0l3ep99tg6ej2bk1ovgc78962euc.apps.googleusercontent.com"
