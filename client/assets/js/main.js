@@ -206,27 +206,68 @@ function filtrerDocuments() {
     const moduleSelect = document.getElementById('filtreModule');
     const choixModule = moduleSelect ? moduleSelect.value.toLowerCase().trim() : "";
 
+    // 1. On filtre tous les documents selon la recherche
     const documentsFiltres = tousLesDocuments.filter(doc => {
         const titre = doc.title ? doc.title.toLowerCase().trim() : "";
         const moduleDoc = doc.module ? doc.module.toLowerCase().trim() : "";
         const filiereDoc = doc.filiere ? doc.filiere.trim() : "";
         const semestreDoc = doc.semestre ? doc.semestre.trim() : "";
-        const categorieDoc = doc.category ? doc.category.trim() : "";
+        // Sécurité : on vérifie 'category' (anglais) ET 'categorie' (français)
+        const categorieDoc = (doc.category || doc.categorie || "").trim();
 
-        // Vérifications assouplies
         const matchTexte = texteRecherche === "" || titre.includes(texteRecherche) || moduleDoc.includes(texteRecherche);
         const matchFiliere = choixFiliere === "" || filiereDoc === choixFiliere;
         const matchSemestre = choixSemestre === "" || semestreDoc === choixSemestre;
         const matchCategorie = choixCategorie === "" || categorieDoc === choixCategorie;
-        
-        // Match tolérant pour le module (prend en compte minuscules/majuscules et espaces)
         const matchModule = choixModule === "" || moduleDoc === choixModule || moduleDoc.includes(choixModule) || choixModule.includes(moduleDoc);
 
         return matchTexte && matchFiliere && matchSemestre && matchCategorie && matchModule;
     });
 
     console.log("🔍 Résultat du filtre :", documentsFiltres.length, "document(s) trouvé(s).");
-    afficherDocuments(documentsFiltres);
+
+    // 2. On prépare les boîtes pour les trier à l'écran
+    const boxMaster = document.getElementById('liste-masters');
+    const boxIngenieur = document.getElementById('liste-ingenieurs');
+    const boxCrmef = document.getElementById('liste-crmef');
+    const boxLivreMath = document.getElementById('liste-livres-math');
+    const boxLivrePhysique = document.getElementById('liste-livres-physique');
+    const boxLivreInfo = document.getElementById('liste-livres-info');
+
+    // On vide toutes les boîtes avant d'afficher les résultats
+    if (boxMaster) boxMaster.innerHTML = '';
+    if (boxIngenieur) boxIngenieur.innerHTML = '';
+    if (boxCrmef) boxCrmef.innerHTML = '';
+    if (boxLivreMath) boxLivreMath.innerHTML = '';
+    if (boxLivrePhysique) boxLivrePhysique.innerHTML = '';
+    if (boxLivreInfo) boxLivreInfo.innerHTML = '';
+
+    const documentsOrdinaires = [];
+
+    // 3. On range les résultats de la recherche dans les bonnes cases
+    documentsFiltres.forEach(doc => {
+        const categorie = doc.categorie || doc.category; 
+
+        if (categorie === "Concours") {
+            const lienConcours = `<a href="${doc.lien}" target="_blank" style="background-color: #f8f9fa; color: #333; text-align: left; padding: 10px; border-radius: 5px; text-decoration: none; font-weight: bold; border-left: 4px solid #6f42c1; display: block; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-size: 0.9em;">📄 ${doc.module}</a>`;
+            if (doc.filiere === "Master" && boxMaster) boxMaster.innerHTML += lienConcours;
+            else if (doc.filiere === "Ingenieur" && boxIngenieur) boxIngenieur.innerHTML += lienConcours.replace('#6f42c1', '#fd7e14');
+            else if (doc.filiere === "CRMEF" && boxCrmef) boxCrmef.innerHTML += lienConcours.replace('#6f42c1', '#20c997');
+        } 
+        else if (categorie === "Livre") {
+            const lienLivre = `<a href="${doc.lien}" target="_blank" style="background-color: white; color: #333; text-align: left; padding: 8px; border-radius: 4px; text-decoration: none; font-weight: bold; border-left: 3px solid #007bff; display: block; margin-bottom: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); font-size: 0.85em;">📖 ${doc.module}</a>`;
+            if (doc.filiere === "Livre Math" && boxLivreMath) boxLivreMath.innerHTML += lienLivre;
+            else if (doc.filiere === "Livre Physique" && boxLivrePhysique) boxLivrePhysique.innerHTML += lienLivre.replace('#007bff', '#28a745');
+            else if (doc.filiere === "Livre Info" && boxLivreInfo) boxLivreInfo.innerHTML += lienLivre.replace('#007bff', '#dc3545');
+        } 
+        else {
+            // Si c'est un cours/TD normal, on le met dans le panier principal
+            documentsOrdinaires.push(doc);
+        }
+    });
+
+    // 4. On affiche les documents normaux dans la grande liste principale
+    afficherDocuments(documentsOrdinaires);
 }
 
 // ==========================================
@@ -374,4 +415,44 @@ window.addEventListener('load', () => {
     if (nomSauvegarde) {
         afficherUtilisateur(nomSauvegarde);
     }
+});
+// ==========================================
+// AFFICHAGE DES ANNONCES DYNAMIQUES
+// ==========================================
+async function chargerAnnonces() {
+    try {
+        const response = await fetch('/api/annonces');
+        const annonces = await response.json();
+        
+        const conteneur = document.getElementById('conteneur-annonces');
+        if (!conteneur) return; // Sécurité si on n'est pas sur la page d'accueil
+        
+        conteneur.innerHTML = ''; // On vide le texte de chargement
+
+        if (annonces.length === 0) {
+            conteneur.innerHTML = `<p style="color: #666;">Aucune annonce pour le moment.</p>`;
+            return;
+        }
+
+        // On affiche chaque annonce
+        annonces.forEach(annonce => {
+            const dateCreation = annonce.date ? new Date(annonce.date).toLocaleDateString('fr-FR') : 'Récemment';
+            const couleur = annonce.couleur || '#17a2b8'; // Bleu par défaut
+
+            conteneur.innerHTML += `
+                <div style="background: white; padding: 15px; border-left: 5px solid ${couleur}; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                    <h4 style="margin: 0 0 5px 0; color: #333;">${annonce.titre}</h4>
+                    <p style="margin: 0; font-size: 0.9em; color: #555; white-space: pre-wrap;">${annonce.contenu}</p>
+                    <span style="font-size: 0.8em; color: #999; display: block; margin-top: 10px;">Publié le ${dateCreation}</span>
+                </div>
+            `;
+        });
+    } catch (erreur) {
+        console.error("Erreur lors du chargement des annonces :", erreur);
+    }
+}
+
+// On lance le chargement des annonces au démarrage
+window.addEventListener('DOMContentLoaded', () => {
+    chargerAnnonces();
 });

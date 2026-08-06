@@ -98,7 +98,31 @@
             <!-- Zone d'affichage des messages de succès ou d'erreur -->
             <div id="uploadStatus"></div>
         </section>
+<!-- ========================================== -->
+<!-- SECTION : PUBLIER UNE ANNONCE              -->
+<!-- ========================================== -->
+<hr style="margin: 50px 0; border: 0; border-top: 1px solid #ccc;">
 
+<section id="gestion-annonces" style="background-color: #f4f7f6; padding: 20px; border-radius: 8px; margin-bottom: 40px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+    <h2 style="color: #2c3e50; margin-top: 0;">📢 Publier une Annonce</h2>
+    
+    <form id="form-annonce" style="display: flex; flex-direction: column; gap: 15px; max-width: 600px;">
+        <input type="text" id="titre-annonce" placeholder="Titre de l'annonce (ex: Emploi du temps S3)" required style="padding: 10px; border-radius: 4px; border: 1px solid #ccc;">
+        
+        <textarea id="contenu-annonce" placeholder="Contenu de l'annonce..." required style="padding: 10px; border-radius: 4px; border: 1px solid #ccc; min-height: 100px;"></textarea>
+        
+        <select id="couleur-annonce" style="padding: 10px; border-radius: 4px; border: 1px solid #ccc;">
+            <option value="#ffc107">🟡 Jaune (Important)</option>
+            <option value="#17a2b8">🔵 Bleu (Information)</option>
+            <option value="#28a745">🟢 Vert (Succès / Nouveau)</option>
+            <option value="#dc3545">🔴 Rouge (Urgent)</option>
+        </select>
+        
+        <button type="submit" style="background-color: #2c3e50; color: white; border: none; padding: 12px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.2s;">
+            Publier l'annonce
+        </button>
+    </form>
+</section>
     </main>
 
     <!-- Pied de page -->
