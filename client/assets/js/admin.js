@@ -233,3 +233,38 @@ async function supprimerDocument(idDocument) {
 
 // 3. On lance le chargement dès qu'on ouvre la page
 chargerDocumentsAdmin();
+// ==========================================
+// ENVOI D'UNE NOUVELLE ANNONCE AU SERVEUR
+// ==========================================
+const formAnnonce = document.getElementById('form-annonce');
+
+if (formAnnonce) {
+    formAnnonce.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Empêche la page de se recharger
+
+        // On récupère les valeurs tapées par l'admin
+        const titre = document.getElementById('titre-annonce').value;
+        const contenu = document.getElementById('contenu-annonce').value;
+        const couleur = document.getElementById('couleur-annonce').value;
+
+        try {
+            const response = await fetch('/api/annonces', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ titre, contenu, couleur })
+            });
+
+            if (response.ok) {
+                alert("📢 Annonce publiée avec succès !");
+                formAnnonce.reset(); // On vide le formulaire
+            } else {
+                alert("❌ Erreur lors de la publication de l'annonce.");
+            }
+        } catch (erreur) {
+            console.error("Erreur réseau :", erreur);
+            alert("❌ Impossible de se connecter au serveur.");
+        }
+    });
+}
