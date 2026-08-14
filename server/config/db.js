@@ -50,6 +50,13 @@ pool.connect((err, client, release) => {
             pseudo TEXT NOT NULL,
             date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
+        CREATE TABLE IF NOT EXISTS annonces (
+            id SERIAL PRIMARY KEY,
+            titre TEXT NOT NULL,
+            contenu TEXT NOT NULL,
+            couleur TEXT DEFAULT '#17a2b8',
+            date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
         `;
 
         client.query(createTables, (err, result) => {

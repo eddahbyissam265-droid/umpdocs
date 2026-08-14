@@ -250,3 +250,121 @@ footer {
         padding: 15px;
     }
 }
+/* ========================================== */
+/* STYLES DE LA SECTION HERO (BIENVENUE)      */
+/* ========================================== */
+
+.hero-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 60px 20px;
+    border-radius: 12px;
+    margin: 20px auto 40px auto;
+    max-width: 1200px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+.hero-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+/* --- Partie Texte --- */
+.hero-text {
+    flex: 1; /* Prend la moitié de l'espace */
+    max-width: 600px;
+}
+
+.hero-title {
+    font-size: 2.8em;
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.highlight {
+    color: #007bff; /* Couleur principale */
+}
+
+.hero-subtitle {
+    font-size: 1.15em;
+    color: #555;
+    margin-bottom: 30px;
+    line-height: 1.6;
+}
+
+/* --- Boutons --- */
+.hero-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1em;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: white;
+    color: #007bff;
+    border: 2px solid #007bff;
+}
+
+.btn-secondary:hover {
+    background-color: #f1f8ff;
+    transform: translateY(-2px);
+}
+
+/* --- Partie Image avec Animation --- */
+.hero-image {
+    flex: 1; /* Prend l'autre moitié */
+    text-align: center;
+}
+
+.hero-image img {
+    max-width: 100%;
+    height: auto;
+    animation: float 6s ease-in-out infinite; /* Animation de flottement */
+}
+
+/* Création de l'animation de flottement */
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+}
+
+/* --- Rendre parfait sur téléphone (Responsive) --- */
+@media (max-width: 850px) {
+    .hero-container {
+        flex-direction: column-reverse; /* Met l'image au-dessus du texte sur mobile */
+        text-align: center;
+    }
+    
+    .hero-title {
+        font-size: 2.2em;
+    }
+
+    .hero-actions {
+        justify-content: center;
+        flex-direction: column; /* Boutons l'un en dessous de l'autre sur petit écran */
+    }
+}
