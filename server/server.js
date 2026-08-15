@@ -1,5 +1,7 @@
 const express = require('express');
 const path = require('path');
+// Autoriser le serveur à lire le dossier "client"
+app.use(express.static(path.join(__dirname, '../client')));
 const cors = require('cors');
 
 console.log("Démarrage en cours, veuillez patienter...");
