@@ -12,6 +12,12 @@ app.use(cors());
 app.use(express.json()); 
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Radar pour voir quels fichiers le navigateur cherche
+app.use((req, res, next) => {
+    console.log("🔍 Le navigateur demande : " + req.url);
+    next();
+});
 app.use(express.static(path.join(__dirname, '../client')));
 
 // ==========================================
