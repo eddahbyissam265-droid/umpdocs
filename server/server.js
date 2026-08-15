@@ -1,45 +1,40 @@
 const express = require('express');
 const path = require('path');
-// Autoriser le serveur à lire le dossier "client"
-app.use(express.static(path.join(__dirname, '../client')));
 const cors = require('cors');
 
 console.log("Démarrage en cours, veuillez patienter...");
 
+// 1. Initialisation de l'application (doit toujours être en haut !)
 const app = express();
 
+// 2. Middlewares de base
 app.use(cors()); 
 app.use(express.json()); 
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// Radar pour voir quels fichiers le navigateur cherche
+// 3. Radar pour voir quels fichiers le navigateur cherche
 app.use((req, res, next) => {
     console.log("🔍 Le navigateur demande : " + req.url);
     next();
 });
+
+// 4. Dossiers statiques (pour l'image, le CSS, le JS)
 app.use(express.static(path.join(__dirname, '../client')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// 5. Importation de la base de données Supabase
+const db = require('./config/db'); 
 
 // ==========================================
-// LA VRAIE PORTE EST GRANDE OUVERTE !
+// ROUTES API : DOCUMENTS
 // ==========================================
 app.use('/api/documents', require('./routes/docRoutes'));
 
-const PORT = 3000;
-
-const db = require('./config/db'); // On importe ta connexion Supabase
-
-// 1. Ajouter une nouvelle annonce (POST)
-
-
-// 2. Récupérer toutes les annonces (GET)
 
 // ==========================================
 // ROUTES API : ANNONCES (PostgreSQL)
 // ==========================================
-const db = require('./config/db'); // Import de la connexion
 
-// 1. Ajouter une nouvelle annonce (POST)
+// A. Ajouter une nouvelle annonce (POST)
 app.post('/api/annonces', async (req, res) => {
     try {
         const { titre, contenu, couleur } = req.body;
@@ -55,13 +50,12 @@ app.post('/api/annonces', async (req, res) => {
     }
 });
 
-// 2. Récupérer toutes les annonces (GET)
+// B. Récupérer toutes les annonces (GET) - C'est celle-ci qui te manquait !
 app.get('/api/annonces', async (req, res) => {
     try {
         const query = 'SELECT * FROM annonces ORDER BY date_added DESC';
         const result = await db.query(query);
         
-        // On adapte les données pour le frontend (qui cherche une propriété "date")
         const annoncesFiltrees = result.rows.map(row => ({
             id: row.id,
             titre: row.titre,
@@ -76,6 +70,11 @@ app.get('/api/annonces', async (req, res) => {
         res.status(500).json({ message: "Erreur serveur" });
     }
 });
+
+// ==========================================
+// DÉMARRAGE DU SERVEUR
+// ==========================================
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
     console.log(`=========================================`);
