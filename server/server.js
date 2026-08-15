@@ -20,38 +20,18 @@ app.use(express.static(path.join(__dirname, '../client')));
 app.use('/api/documents', require('./routes/docRoutes'));
 
 const PORT = 3000;
-// ==========================================
-// ROUTES API : ANNONCES
-// ==========================================
+
+const db = require('./config/db'); // On importe ta connexion Supabase
 
 // 1. Ajouter une nouvelle annonce (POST)
-app.post('/api/annonces', async (req, res) => {
-    try {
-        const { titre, contenu, couleur } = req.body;
-        const nouvelleAnnonce = new Annonce({ titre, contenu, couleur });
-        await nouvelleAnnonce.save();
-        res.status(201).json({ message: "Annonce publiée avec succès", annonce: nouvelleAnnonce });
-    } catch (erreur) {
-        console.error("Erreur création annonce :", erreur);
-        res.status(500).json({ message: "Erreur serveur" });
-    }
-});
+
 
 // 2. Récupérer toutes les annonces (GET)
-app.get('/api/annonces', async (req, res) => {
-    try {
-        // Le .sort({ date: -1 }) permet d'afficher les plus récentes en premier !
-        const annonces = await Annonce.find().sort({ date: -1 });
-        res.status(200).json(annonces);
-    } catch (erreur) {
-        console.error("Erreur récupération annonces :", erreur);
-        res.status(500).json({ message: "Erreur serveur" });
-    }
-});
+
 // ==========================================
 // ROUTES API : ANNONCES (PostgreSQL)
 // ==========================================
-const db = require('./config/db'); // On importe ta connexion Supabase
+const db = require('./config/db'); // Import de la connexion
 
 // 1. Ajouter une nouvelle annonce (POST)
 app.post('/api/annonces', async (req, res) => {
@@ -62,7 +42,6 @@ app.post('/api/annonces', async (req, res) => {
         
         const result = await db.query(query, values);
         
-        // Postgres renvoie la donnée créée dans result.rows[0]
         res.status(201).json({ message: "Annonce publiée avec succès", annonce: result.rows[0] });
     } catch (erreur) {
         console.error("Erreur création annonce :", erreur);
@@ -91,6 +70,7 @@ app.get('/api/annonces', async (req, res) => {
         res.status(500).json({ message: "Erreur serveur" });
     }
 });
+
 app.listen(PORT, () => {
     console.log(`=========================================`);
     console.log(`🚀 Serveur UMPDocs démarré sur le port ${PORT}`);
