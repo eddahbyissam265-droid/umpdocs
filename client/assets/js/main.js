@@ -1,3 +1,16 @@
+// ==========================================
+// AFFICHAGE DU BOUTON ADMIN (Si connecté)
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    const adminToken = localStorage.getItem('fsdocs_token'); 
+    const btnAdmin = document.getElementById('btn-admin');
+
+    // Si on a la clé secrète dans le navigateur, on affiche le bouton
+    if (adminToken && btnAdmin) {
+        btnAdmin.style.display = 'inline-block';
+    }
+});
+
 console.log("🟢 ÉTAPE 1 : Le fichier JavaScript est bien connecté à la page HTML !");
 
 // ==========================================
