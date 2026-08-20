@@ -160,9 +160,17 @@ function afficherDocuments(documents) {
                 <p><strong>Module :</strong> ${doc.module}</p>
                 <p><strong>Filière :</strong> ${doc.filiere} | <strong>Semestre :</strong> ${doc.semestre} | <strong>Catégorie :</strong> ${doc.category}</p>
                 
-                <a href="${doc.file_path}" target="_blank" style="display: inline-block; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; margin-top: 10px; margin-bottom: 15px;">
-                    📥 Télécharger
-                </a>
+                <!-- 🌟 BOÎTE POUR LES BOUTONS (Télécharger + Copier) -->
+                <div style="display: flex; gap: 15px; align-items: center; margin-top: 10px; margin-bottom: 15px;">
+                    <a href="${doc.file_path}" target="_blank" style="display: inline-block; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+                        📥 Télécharger
+                    </a>
+                    
+                    <!-- LE BOUTON MAGIQUE EST ICI -->
+                    <button onclick="copierLienMagique('${doc.title}')" style="background: none; border: none; color: #007bff; cursor: pointer; text-decoration: underline; font-size: 0.9em; padding: 0;">
+                        🔗 Copier le lien
+                    </button>
+                </div>
                 
                 <!-- NOUVEAU : SECTION COMMENTAIRES -->
                 <div style="border-top: 1px solid #eee; padding-top: 10px;">
@@ -492,3 +500,20 @@ async function chargerAnnonces() {
 window.addEventListener('DOMContentLoaded', () => {
     chargerAnnonces();
 });
+// ==========================================
+// FONCTION POUR COPIER LE LIEN MAGIQUE
+// ==========================================
+// ==========================================
+// FONCTION POUR COPIER LE LIEN MAGIQUE
+// ==========================================
+function copierLienMagique(nomDuCours) {
+    const urlBase = window.location.origin + window.location.pathname;
+    const lienComplet = urlBase + '?recherche=' + encodeURIComponent(nomDuCours);
+
+    navigator.clipboard.writeText(lienComplet).then(() => {
+        alert("✅ Lien copié avec succès !\nVous pouvez le coller (Ctrl+V) où vous voulez.");
+    }).catch(err => {
+        console.error("Erreur lors de la copie :", err);
+        alert("❌ Impossible de copier le lien. Veuillez le faire manuellement.");
+    });
+}
