@@ -219,7 +219,14 @@ function filtrerDocuments() {
     
     const moduleSelect = document.getElementById('filtreModule');
     const choixModule = moduleSelect ? moduleSelect.value.toLowerCase().trim() : "";
-
+// --- RADAR DE DÉBOGAGE ---
+    console.log("🎯 CHOIX DE L'UTILISATEUR :");
+    console.log("Filière choisie : '" + choixFiliere + "'");
+    console.log("Nombre total de documents avant filtre :", tousLesDocuments.length);
+    if (tousLesDocuments.length > 0) {
+        console.log("🔍 À QUOI RESSEMBLE UN DOCUMENT :", tousLesDocuments[0]);
+    }
+    // -------------------------
     // 2. On filtre tous les documents selon la recherche
     const documentsFiltres = tousLesDocuments.filter(doc => {
         const titre = doc.title ? doc.title.toLowerCase().trim() : "";
