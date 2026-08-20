@@ -121,6 +121,21 @@ async function chargerDocuments() {
 
         // On affiche les documents normaux
         afficherDocuments(documentsOrdinaires); 
+
+        // ==========================================
+        // 🌟 L'ASTUCE DU LIEN MAGIQUE
+        // ==========================================
+        const parametresUrl = new URLSearchParams(window.location.search);
+        const motCle = parametresUrl.get('recherche'); // On cherche "?recherche=..." dans l'URL
+
+        if (motCle) {
+            const barre = document.getElementById('barreRecherche');
+            if (barre) {
+                barre.value = motCle; // On remplit la barre de recherche avec le mot
+                filtrerDocuments();   // On lance le filtre automatiquement !
+            }
+        }
+        // ==========================================
         
     } catch (erreur) {
         console.error("🔴 ERREUR LORS DU CHARGEMENT :", erreur);
