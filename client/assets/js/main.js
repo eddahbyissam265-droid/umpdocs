@@ -526,3 +526,31 @@ function copierLienMagique(nomDuCours) {
         alert("❌ Impossible de copier le lien. Veuillez le faire manuellement.");
     });
 }
+// ==========================================
+// ALLUMER LE BON BOUTON DU MENU AUTOMATIQUEMENT
+// ==========================================
+function allumerMenuActif() {
+    // 1. On récupère le nom du fichier actuel dans l'URL (ex: "concours.html")
+    let pageActuelle = window.location.pathname.split('/').pop();
+    
+    // Si l'URL est juste le nom du site (vide), c'est qu'on est sur l'accueil
+    if (pageActuelle === "" || pageActuelle === "/") {
+        pageActuelle = "index.html";
+    }
+
+    // 2. On récupère tous les boutons du menu
+    const liens = document.querySelectorAll('.nav-link');
+
+    // 3. On allume le bon, et on éteint les autres
+    liens.forEach(lien => {
+        if (lien.getAttribute('href') === pageActuelle) {
+            lien.style.backgroundColor = "rgba(255, 255, 255, 0.2)"; // On allume
+            lien.style.borderRadius = "4px"; // Pour que ce soit joli
+        } else {
+            lien.style.backgroundColor = "transparent"; // On éteint
+        }
+    });
+}
+
+// On lance cette fonction automatiquement dès que la page s'ouvre !
+document.addEventListener('DOMContentLoaded', allumerMenuActif);
