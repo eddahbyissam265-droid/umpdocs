@@ -114,87 +114,22 @@
 
     <!-- Conteneur Principal -->
     <main class="main-container">
-
-        <!-- Section Titre et Recherche -->
-        <!-- ========================================== -->
-<!-- SECTION : HERO (BIENVENUE + IMAGE)         -->
-<!-- ========================================== -->
-<section class="hero-section">
-    <div class="hero-container">
-        
-        <!-- Colonne Gauche : Le Texte -->
-        <div class="hero-text">
-            <h1 class="hero-title">Bienvenue sur <span class="highlight">biblio-UMP</span> 🎓</h1>
-            <p class="hero-subtitle">
-                Votre bibliothèque numérique intelligente. Accédez facilement à vos cours, TD, examens récents et ressources exclusives pour réussir votre année.
-            </p>
-            <div class="hero-actions">
-                <a href="#documents" class="btn-primary">Explorer les cours</a>
-                <a href="#annonces" class="btn-secondary">Voir les nouveautés</a>
-            </div>
-        </div>
-
-        <!-- Colonne Droite : L'Image -->
-        <div class="hero-image">
-            <!-- J'ai mis une image d'illustration en ligne pour que tu puisses tester tout de suite. 
-                 Plus tard, tu pourras la remplacer par une image de ton dossier assets. -->
-            <img src="assets\img\hero2.png" alt="Étudiants FSdocs">
-        </div>
-
-    </div>
-</section>
-
         <!-- Section Grille de Documents -->
         <section class="documents-section">
             <h2>Documents Disponibles</h2>
-            <!-- ZONE DE RECHERCHE ET FILTRES -->
-<div class="recherche-container" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+   <!-- ========================================== -->
+<!-- SECTION : ANNONCES (DYNAMIQUE)             -->
+<!-- ========================================== -->
+<hr style="margin: 50px 0; border: 0; border-top: 1px solid #ccc;">
+
+<section id="annonces" style="padding: 20px; background-color: #f4f7f6; border-radius: 8px; margin-bottom: 40px;">
+    <h2 style="color: #2c3e50; margin-top: 0; font-size: 1.8em;">📢 Dernières Annonces</h2>
     
-    <!-- L'UNIQUE barre de recherche -->
-    <input type="text" id="barreRecherche" placeholder="🔍 Chercher un module, un titre..." style="padding: 8px; flex: 1; min-width: 200px; border-radius: 5px; border: 1px solid #ccc;">
-    
-    <!-- Filtre Filière -->
-    <select id="filtreFiliere" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-        <option value="">Toutes les filières</option>
-        <option value="MIP Math">MIP Math</option>
-        <option value="MIP Informatique">MIP Informatique</option>
-        <option value="TC Informatiques Appliquées">TC Informatiques Appliquées</option>
-        <option value="Licence de Physique PC-P">Licence de Physique PC-P</option>
-        <option value="Licence de Chimie PC-C">Licence de Chimie PC-C</option>
-        <option value="EGC">EGC</option>
-    </select>
-
-    <!-- Filtre Semestre -->
-    <select id="filtreSemestre" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-        <option value="">Tous les semestres</option>
-        <option value="S1">S1</option>
-        <option value="S2">S2</option>
-        <option value="S3">S3</option>
-        <option value="S4">S4</option>
-        <option value="S5">S5</option>
-        <option value="S6">S6</option>
-    </select>
-
-    <!-- Filtre Module intelligent -->
-    <select id="filtreModule" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-        <option value="">Tous les modules</option>
-    </select>
-
-    <!-- Filtre Catégorie (CELUI QUE J'AVAIS OUBLIÉ ! 😅) -->
-    <select id="filtreCategorie" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-        <option value="">Toutes les catégories</option>
-        <option value="Cours">Cours</option>
-        <option value="TD">TD / Exercices</option>
-        <option value="Examens">Examens / Contrôles</option>
-        <option value="Résumé">Résumé</option>
-    </select>
-    
-</div>
-            <div id="documents-container" class="documents-grid">
-                <!-- Les cartes de documents seront ajoutées dynamiquement ici par main.js -->
-            </div>
-        </section>
-
+    <!-- Les annonces s'afficheront ici -->
+    <div id="conteneur-annonces" style="display: flex; flex-direction: column; gap: 15px;">
+        <p style="color: #999; font-style: italic;">Chargement des annonces en cours...</p>
+    </div>
+</section>
 
 <!-- ========================================== -->
 <!-- PIED DE PAGE (FOOTER)                      -->
@@ -209,10 +144,6 @@
     </footer>
 
     <script src="assets/js/main.js?v=5"></script>
-<!-- ========================================== -->
-<!-- PIED DE PAGE (FOOTER)                      -->
-<!-- ========================================== -->
-<!-- ========================================== -->
 <!-- PIED DE PAGE (FOOTER)                      -->
 <!-- ========================================== -->
 <footer id="contact" style="text-align: center; padding: 20px; margin-top: 50px; border-top: 1px solid #e0e0e0; color: #666; font-size: 0.9em; background-color: #f8f9fa;">

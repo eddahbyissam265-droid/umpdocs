@@ -148,53 +148,60 @@
         <section class="documents-section">
             <h2>Documents Disponibles</h2>
             <!-- ZONE DE RECHERCHE ET FILTRES -->
-<div class="recherche-container" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-    
-    <!-- L'UNIQUE barre de recherche -->
-    <input type="text" id="barreRecherche" placeholder="🔍 Chercher un module, un titre..." style="padding: 8px; flex: 1; min-width: 200px; border-radius: 5px; border: 1px solid #ccc;">
-    
-    <!-- Filtre Filière -->
-    <select id="filtreFiliere" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-        <option value="">Toutes les filières</option>
-        <option value="MIP Math">MIP Math</option>
-        <option value="MIP Informatique">MIP Informatique</option>
-        <option value="TC Informatiques Appliquées">TC Informatiques Appliquées</option>
-        <option value="Licence de Physique PC-P">Licence de Physique PC-P</option>
-        <option value="Licence de Chimie PC-C">Licence de Chimie PC-C</option>
-        <option value="EGC">EGC</option>
-    </select>
 
-    <!-- Filtre Semestre -->
-    <select id="filtreSemestre" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-        <option value="">Tous les semestres</option>
-        <option value="S1">S1</option>
-        <option value="S2">S2</option>
-        <option value="S3">S3</option>
-        <option value="S4">S4</option>
-        <option value="S5">S5</option>
-        <option value="S6">S6</option>
-    </select>
 
-    <!-- Filtre Module intelligent -->
-    <select id="filtreModule" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-        <option value="">Tous les modules</option>
-    </select>
-
-    <!-- Filtre Catégorie (CELUI QUE J'AVAIS OUBLIÉ ! 😅) -->
-    <select id="filtreCategorie" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-        <option value="">Toutes les catégories</option>
-        <option value="Cours">Cours</option>
-        <option value="TD">TD / Exercices</option>
-        <option value="Examens">Examens / Contrôles</option>
-        <option value="Résumé">Résumé</option>
-    </select>
+<!-- SECTION : CONCOURS & MASTERS (DYNAMIQUE)   -->
+<!-- ========================================== -->
+<section id="concours" style="padding: 30px 20px; background-color: #f8f9fa; border-top: 1px solid #e9ecef; margin-bottom: 40px;">
     
-</div>
-            <div id="documents-container" class="documents-grid">
-                <!-- Les cartes de documents seront ajoutées dynamiquement ici par main.js -->
+    <div style="text-align: center; margin-bottom: 30px;">
+        <h2 style="color: #2c3e50; margin-top: 0; font-size: 2em;">🏆 Préparation aux Concours & Masters</h2>
+        <p style="color: #6c757d; font-size: 1.1em; max-width: 800px; margin: 0 auto;">Accédez aux annales, sujets corrigés et informations pour réussir vos concours d'accès aux Grandes Écoles et Cycles Master.</p>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto;">
+        
+        <!-- Carte 1 : Masters -->
+        <div style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 4px solid #6f42c1;">
+            <div style="padding: 20px;">
+                <div style="font-size: 2.5em; margin-bottom: 10px;">🎓</div>
+                <h3 style="margin: 0 0 10px 0; color: #333;">Masters de la Faculté</h3>
+                <p style="color: #666; font-size: 0.9em; min-height: 60px;">Exemples de concours écrits des années précédentes.</p>
+                <!-- La boîte magique pour les Masters -->
+                <div id="liste-masters" style="display: flex; flex-direction: column; gap: 8px;">
+                    <p style="color: #999; font-size: 0.8em; text-align: center;">Aucun document pour le moment...</p>
+                </div>
             </div>
-        </section>
+        </div>
 
+        <!-- Carte 2 : Écoles d'Ingénieurs -->
+        <div style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 4px solid #fd7e14;">
+            <div style="padding: 20px;">
+                <div style="font-size: 2.5em; margin-bottom: 10px;">🚀</div>
+                <h3 style="margin: 0 0 10px 0; color: #333;">Écoles d'Ingénieurs</h3>
+                <p style="color: #666; font-size: 0.9em; min-height: 60px;">Concours nationaux, CNC, ENSA, ENSAM et Passerelles.</p>
+                <!-- La boîte magique pour les Ingénieurs -->
+                <div id="liste-ingenieurs" style="display: flex; flex-direction: column; gap: 8px;">
+                    <p style="color: #999; font-size: 0.8em; text-align: center;">Aucun document pour le moment...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Carte 3 : Enseignement & Autres -->
+        <div style="background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 4px solid #20c997;">
+            <div style="padding: 20px;">
+                <div style="font-size: 2.5em; margin-bottom: 10px;">👨‍🏫</div>
+                <h3 style="margin: 0 0 10px 0; color: #333;">Métiers de l'Enseignement</h3>
+                <p style="color: #666; font-size: 0.9em; min-height: 60px;">Sujets d'accès aux Centres Régionaux (CRMEF).</p>
+                <!-- La boîte magique pour le CRMEF -->
+                <div id="liste-crmef" style="display: flex; flex-direction: column; gap: 8px;">
+                    <p style="color: #999; font-size: 0.8em; text-align: center;">Aucun document pour le moment...</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
 
 <!-- ========================================== -->
 <!-- PIED DE PAGE (FOOTER)                      -->
