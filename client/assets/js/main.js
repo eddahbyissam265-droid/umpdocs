@@ -166,9 +166,9 @@ function afficherDocuments(documents) {
                         📥 Télécharger
                     </a>
                     
-                    <!-- LE BOUTON MAGIQUE EST ICI -->
-                    <button onclick="copierLienMagique('${doc.title}')" style="background: none; border: none; color: #007bff; cursor: pointer; text-decoration: underline; font-size: 0.9em; padding: 0;">
-                        🔗 Copier le lien
+                    <!-- LE BOUTON MAGIQUE EST ICI (Version Icône) -->
+                    <button onclick="copierLienMagique('${doc.title}')" title="Copier le lien" style="background: none; border: none; cursor: pointer; font-size: 1.4em; padding: 0;">
+                        📋
                     </button>
                 </div>
                 
