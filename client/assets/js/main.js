@@ -225,10 +225,7 @@ function updateModulesFilter() {
     filtrerDocuments();
 }
 
-// ==========================================
-// FILTRAGE DES DOCUMENTS
-// ==========================================
-// ==========================================
+
 // FILTRAGE DES DOCUMENTS (VERSION FLEXIBLE)
 // ==========================================
 function filtrerDocuments() {
@@ -488,14 +485,25 @@ async function chargerAnnonces() {
         }
 
         // On affiche chaque annonce
+        // On affiche chaque annonce
         annonces.forEach(annonce => {
             const dateCreation = annonce.date ? new Date(annonce.date).toLocaleDateString('fr-FR') : 'Récemment';
             const couleur = annonce.couleur || '#17a2b8'; // Bleu par défaut
 
+            // 🌟 NOUVEAU : On prépare la balise image si l'annonce contient une image
+            const imageHtml = annonce.image_url 
+                ? `<img src="${annonce.image_url}" alt="Image de l'annonce" style="max-width: 100%; max-height: 400px; border-radius: 8px; margin-top: 10px; margin-bottom: 10px; display: block;">` 
+                : '';
+
             conteneur.innerHTML += `
-                <div style="background: white; padding: 15px; border-left: 5px solid ${couleur}; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                <div style="background: white; padding: 15px; border-left: 5px solid ${couleur}; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 15px;">
                     <h4 style="margin: 0 0 5px 0; color: #333;">${annonce.titre}</h4>
-                    <p style="margin: 0; font-size: 0.9em; color: #555; white-space: pre-wrap;">${annonce.contenu}</p>
+                    
+                    <!-- 🌟 L'IMAGE APPARAÎT ICI -->
+                    ${imageHtml}
+                    
+                    <p style="margin: 0; font-size: 0.9em; color: #555; white-space: pre-wrap;">${rendreLiensCliquables(annonce.contenu)}</p>
+                    
                     <span style="font-size: 0.8em; color: #999; display: block; margin-top: 10px;">Publié le ${dateCreation}</span>
                 </div>
             `;
@@ -509,9 +517,6 @@ async function chargerAnnonces() {
 window.addEventListener('DOMContentLoaded', () => {
     chargerAnnonces();
 });
-// ==========================================
-// FONCTION POUR COPIER LE LIEN MAGIQUE
-// ==========================================
 // ==========================================
 // FONCTION POUR COPIER LE LIEN MAGIQUE
 // ==========================================
@@ -554,3 +559,16 @@ function allumerMenuActif() {
 
 // On lance cette fonction automatiquement dès que la page s'ouvre !
 document.addEventListener('DOMContentLoaded', allumerMenuActif);
+// ==========================================
+// DÉTECTEUR DE LIENS DANS LES ANNONCES
+// ==========================================
+function rendreLiensCliquables(texte) {
+    if (!texte) return ""; // Sécurité si le texte est vide
+    // Cette formule (Regex) cherche tout ce qui ressemble à un lien web
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    
+    // On remplace le texte par une vraie balise <a> HTML
+    return texte.replace(urlRegex, function(url) {
+        return `<a href="${url}" target="_blank" style="color: #007bff; text-decoration: underline; font-weight: bold;">🔗 Cliquez ici pour accéder au lien</a>`;
+    });
+}

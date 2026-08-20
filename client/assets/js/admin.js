@@ -246,14 +246,25 @@ if (formAnnonce) {
         const titre = document.getElementById('titre-annonce').value;
         const contenu = document.getElementById('contenu-annonce').value;
         const couleur = document.getElementById('couleur-annonce').value;
+        
+        // 🌟 NOUVEAU : On récupère l'image si elle existe
+        const fichierImage = document.getElementById('imageAnnonce').files[0];
+
+        // 🌟 NOUVEAU : On prépare le "camion" FormData pour envoyer le texte + l'image
+        const formData = new FormData();
+        formData.append('titre', titre);
+        formData.append('contenu', contenu);
+        formData.append('couleur', couleur);
+        
+        if (fichierImage) {
+            formData.append('image', fichierImage); // 'image' sera le nom reconnu par le serveur
+        }
 
         try {
+            // ⚠️ ATTENTION : on n'utilise plus JSON ici, le navigateur gère tout seul le bon format !
             const response = await fetch('/api/annonces', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ titre, contenu, couleur })
+                body: formData // On envoie le camion direct, sans le headers JSON
             });
 
             if (response.ok) {

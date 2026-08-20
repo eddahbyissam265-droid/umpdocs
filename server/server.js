@@ -1,5 +1,17 @@
-const express = require('express');
+const multer = require('multer');
 const path = require('path');
+
+// 🌟 CONFIGURATION DE MULTER (Pour dire où et comment ranger les images)
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'client/uploads/'); // Le dossier qu'on vient de créer
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname)); // On donne un nom unique
+    }
+});
+const upload = multer({ storage: storage });
+const express = require('express');
 const cors = require('cors');
 
 console.log("Démarrage en cours, veuillez patienter...");
@@ -35,11 +47,17 @@ app.use('/api/documents', require('./routes/docRoutes'));
 // ==========================================
 
 // A. Ajouter une nouvelle annonce (POST)
-app.post('/api/annonces', async (req, res) => {
+// A. Ajouter une nouvelle annonce (POST) avec prise en charge de l'image
+app.post('/api/annonces', upload.single('image'), async (req, res) => {
     try {
         const { titre, contenu, couleur } = req.body;
-        const query = 'INSERT INTO annonces (titre, contenu, couleur) VALUES ($1, $2, $3) RETURNING *';
-        const values = [titre, contenu, couleur || '#17a2b8'];
+        
+        // 🌟 NOUVEAU : Si une image est là, on fabrique son lien, sinon c'est null
+        const imageUrl = req.file ? '/uploads/' + req.file.filename : null;
+
+        // 🌟 NOUVEAU : On ajoute image_url dans la base de données
+        const query = 'INSERT INTO annonces (titre, contenu, couleur, image_url) VALUES ($1, $2, $3, $4) RETURNING *';
+        const values = [titre, contenu, couleur || '#17a2b8', imageUrl];
         
         const result = await db.query(query, values);
         
@@ -80,4 +98,13 @@ app.listen(PORT, () => {
     console.log(`=========================================`);
     console.log(`🚀 Serveur UMPDocs démarré sur le port ${PORT}`);
     console.log(`=========================================`);
+});
+// 🛠️ ROUTE TEMPORAIRE POUR METTRE À JOUR LA BASE DE DONNÉES
+app.get('/api/maj-bdd', async (req, res) => {
+    try {
+        await db.query('ALTER TABLE annonces ADD COLUMN image_url VARCHAR(255);');
+        res.send('✅ Base de données mise à jour avec succès ! (Tu peux maintenant supprimer cette route du code)');
+    } catch (erreur) {
+        res.send('❌ Erreur (ou la colonne existe déjà) : ' + erreur.message);
+    }
 });
