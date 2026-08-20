@@ -486,20 +486,29 @@ async function chargerAnnonces() {
 
         // On affiche chaque annonce
         // On affiche chaque annonce
+        // On affiche chaque annonce
         annonces.forEach(annonce => {
             const dateCreation = annonce.date ? new Date(annonce.date).toLocaleDateString('fr-FR') : 'Récemment';
-            const couleur = annonce.couleur || '#17a2b8'; // Bleu par défaut
+            const couleur = annonce.couleur || '#17a2b8'; 
 
-            // 🌟 NOUVEAU : On prépare la balise image si l'annonce contient une image
             const imageHtml = annonce.image_url 
                 ? `<img src="${annonce.image_url}" alt="Image de l'annonce" style="max-width: 100%; max-height: 400px; border-radius: 8px; margin-top: 10px; margin-bottom: 10px; display: block;">` 
                 : '';
 
+            // 🌟 NOUVEAU : On vérifie si tu es admin, si oui on crée le bouton
+            const isAdmin = localStorage.getItem('admin') === 'true';
+            const boutonSupprimerHtml = isAdmin 
+                ? `<button onclick="supprimerAnnonce(${annonce.id})" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; float: right; font-size: 0.9em;">🗑️ Supprimer</button>` 
+                : '';
+
             conteneur.innerHTML += `
                 <div style="background: white; padding: 15px; border-left: 5px solid ${couleur}; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 15px;">
+                    
+                    <!-- 🌟 LE BOUTON APPARAÎT ICI (SI ADMIN) -->
+                    ${boutonSupprimerHtml}
+
                     <h4 style="margin: 0 0 5px 0; color: #333;">${annonce.titre}</h4>
                     
-                    <!-- 🌟 L'IMAGE APPARAÎT ICI -->
                     ${imageHtml}
                     
                     <p style="margin: 0; font-size: 0.9em; color: #555; white-space: pre-wrap;">${rendreLiensCliquables(annonce.contenu)}</p>
@@ -571,4 +580,29 @@ function rendreLiensCliquables(texte) {
     return texte.replace(urlRegex, function(url) {
         return `<a href="${url}" target="_blank" style="color: #007bff; text-decoration: underline; font-weight: bold;">🔗 Cliquez ici pour accéder au lien</a>`;
     });
+}
+// ==========================================
+// SUPPRIMER UNE ANNONCE
+// ==========================================
+async function supprimerAnnonce(id) {
+    // On demande confirmation pour éviter les erreurs !
+    const confirmation = confirm("⚠️ Es-tu sûr de vouloir supprimer cette annonce définitivement ?");
+    
+    if (confirmation) {
+        try {
+            const response = await fetch(`/api/annonces/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                alert("🗑️ Annonce supprimée !");
+                location.reload(); // On rafraîchit la page pour faire disparaître l'annonce
+            } else {
+                alert("❌ Erreur lors de la suppression.");
+            }
+        } catch (erreur) {
+            console.error("Erreur réseau :", erreur);
+            alert("❌ Impossible de joindre le serveur.");
+        }
+    }
 }

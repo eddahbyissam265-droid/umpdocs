@@ -67,7 +67,21 @@ app.post('/api/annonces', upload.single('image'), async (req, res) => {
         res.status(500).json({ message: "Erreur serveur" });
     }
 });
-
+// B. Supprimer une annonce (DELETE)
+app.delete('/api/annonces/:id', async (req, res) => {
+    try {
+        const idAnnonce = req.params.id;
+        
+        // On demande à la base de données de supprimer la ligne correspondante
+        const query = 'DELETE FROM annonces WHERE id = $1';
+        await db.query(query, [idAnnonce]);
+        
+        res.status(200).json({ message: "Annonce supprimée avec succès" });
+    } catch (erreur) {
+        console.error("Erreur lors de la suppression :", erreur);
+        res.status(500).json({ message: "Erreur serveur lors de la suppression" });
+    }
+});
 // B. Récupérer toutes les annonces (GET) - C'est celle-ci qui te manquait !
 app.get('/api/annonces', async (req, res) => {
     try {
@@ -98,13 +112,4 @@ app.listen(PORT, () => {
     console.log(`=========================================`);
     console.log(`🚀 Serveur UMPDocs démarré sur le port ${PORT}`);
     console.log(`=========================================`);
-});
-// 🛠️ ROUTE TEMPORAIRE POUR METTRE À JOUR LA BASE DE DONNÉES
-app.get('/api/maj-bdd', async (req, res) => {
-    try {
-        await db.query('ALTER TABLE annonces ADD COLUMN image_url VARCHAR(255);');
-        res.send('✅ Base de données mise à jour avec succès ! (Tu peux maintenant supprimer cette route du code)');
-    } catch (erreur) {
-        res.send('❌ Erreur (ou la colonne existe déjà) : ' + erreur.message);
-    }
 });
