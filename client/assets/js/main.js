@@ -1,4 +1,4 @@
-// ==========================================
+let tousLesDocuments = [];
 // AFFICHAGE DU BOUTON ADMIN (Si connecté)
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
@@ -67,12 +67,10 @@ const dataModules = {
     }
 };
 
-let tousLesDocuments = [];
-
 async function chargerDocuments() {
     try {
         const response = await fetch('/api/documents');
-        const tousLesDocuments = await response.json();
+        tousLesDocuments = await response.json();
         
         // Boîtes Concours
         const boxMaster = document.getElementById('liste-masters');
