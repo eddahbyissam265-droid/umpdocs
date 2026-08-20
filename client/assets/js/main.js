@@ -211,22 +211,24 @@ function updateModulesFilter() {
 // FILTRAGE DES DOCUMENTS (VERSION FLEXIBLE)
 // ==========================================
 function filtrerDocuments() {
+    // 1. On passe tous les choix en minuscules (.toLowerCase()) pour éviter les bugs de casse
     const texteRecherche = document.getElementById('barreRecherche') ? document.getElementById('barreRecherche').value.toLowerCase().trim() : "";
-    const choixFiliere = document.getElementById('filtreFiliere') ? document.getElementById('filtreFiliere').value.trim() : "";
-    const choixSemestre = document.getElementById('filtreSemestre') ? document.getElementById('filtreSemestre').value.trim() : "";
-    const choixCategorie = document.getElementById('filtreCategorie') ? document.getElementById('filtreCategorie').value.trim() : "";
+    const choixFiliere = document.getElementById('filtreFiliere') ? document.getElementById('filtreFiliere').value.toLowerCase().trim() : "";
+    const choixSemestre = document.getElementById('filtreSemestre') ? document.getElementById('filtreSemestre').value.toLowerCase().trim() : "";
+    const choixCategorie = document.getElementById('filtreCategorie') ? document.getElementById('filtreCategorie').value.toLowerCase().trim() : "";
     
     const moduleSelect = document.getElementById('filtreModule');
     const choixModule = moduleSelect ? moduleSelect.value.toLowerCase().trim() : "";
 
-    // 1. On filtre tous les documents selon la recherche
+    // 2. On filtre tous les documents selon la recherche
     const documentsFiltres = tousLesDocuments.filter(doc => {
         const titre = doc.title ? doc.title.toLowerCase().trim() : "";
         const moduleDoc = doc.module ? doc.module.toLowerCase().trim() : "";
-        const filiereDoc = doc.filiere ? doc.filiere.trim() : "";
-        const semestreDoc = doc.semestre ? doc.semestre.trim() : "";
-        // Sécurité : on vérifie 'category' (anglais) ET 'categorie' (français)
-        const categorieDoc = (doc.category || doc.categorie || "").trim();
+        
+        // On met aussi les données du document en minuscules pour la comparaison
+        const filiereDoc = doc.filiere ? doc.filiere.toLowerCase().trim() : "";
+        const semestreDoc = doc.semestre ? doc.semestre.toLowerCase().trim() : "";
+        const categorieDoc = (doc.category || doc.categorie || "").toLowerCase().trim();
 
         const matchTexte = texteRecherche === "" || titre.includes(texteRecherche) || moduleDoc.includes(texteRecherche);
         const matchFiliere = choixFiliere === "" || filiereDoc === choixFiliere;
@@ -239,7 +241,7 @@ function filtrerDocuments() {
 
     console.log("🔍 Résultat du filtre :", documentsFiltres.length, "document(s) trouvé(s).");
 
-    // 2. On prépare les boîtes pour les trier à l'écran
+    // 3. On prépare les boîtes pour les trier à l'écran
     const boxMaster = document.getElementById('liste-masters');
     const boxIngenieur = document.getElementById('liste-ingenieurs');
     const boxCrmef = document.getElementById('liste-crmef');
@@ -257,7 +259,8 @@ function filtrerDocuments() {
 
     const documentsOrdinaires = [];
 
-    // 3. On range les résultats de la recherche dans les bonnes cases
+    // 4. On range les résultats de la recherche dans les bonnes cases
+    // (Le doc.filiere d'origine garde ses majuscules, donc ça ne casse pas tes if en dessous !)
     documentsFiltres.forEach(doc => {
         const categorie = doc.categorie || doc.category; 
 
@@ -279,7 +282,7 @@ function filtrerDocuments() {
         }
     });
 
-    // 4. On affiche les documents normaux dans la grande liste principale
+    // 5. On affiche les documents normaux dans la grande liste principale
     afficherDocuments(documentsOrdinaires);
 }
 
