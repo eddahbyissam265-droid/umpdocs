@@ -233,12 +233,21 @@ function updateModulesFilter() {
 // ==========================================
 function filtrerDocuments() {
     // 1. On passe tous les choix en minuscules (.toLowerCase()) pour éviter les bugs de casse
-    const texteRecherche = document.getElementById('barreRecherche') ? document.getElementById('barreRecherche').value.toLowerCase().trim() : "";
-    const choixFiliere = document.getElementById('filtreFiliere') ? document.getElementById('filtreFiliere').value.toLowerCase().trim() : "";
-    const choixSemestre = document.getElementById('filtreSemestre') ? document.getElementById('filtreSemestre').value.toLowerCase().trim() : "";
-    const choixCategorie = document.getElementById('filtreCategorie') ? document.getElementById('filtreCategorie').value.toLowerCase().trim() : "";
-    
-    const moduleSelect = document.getElementById('filtreModule');
+    // --- SÉCURITÉ POUR LES PAGES SANS FILTRES ---
+const barre = document.getElementById('barreRecherche');
+if (barre) barre.addEventListener('input', filtrerDocuments);
+
+const filtreFiliere = document.getElementById('filtreFiliere');
+if (filtreFiliere) filtreFiliere.addEventListener('change', filtrerDocuments);
+
+const filtreSemestre = document.getElementById('filtreSemestre');
+if (filtreSemestre) filtreSemestre.addEventListener('change', filtrerDocuments);
+
+const filtreCategorie = document.getElementById('filtreCategorie');
+if (filtreCategorie) filtreCategorie.addEventListener('change', filtrerDocuments);
+
+const filtreModule = document.getElementById('filtreModule');
+if (filtreModule) filtreModule.addEventListener('change', filtrerDocuments);
     const choixModule = moduleSelect ? moduleSelect.value.toLowerCase().trim() : "";
 // --- RADAR DE DÉBOGAGE ---
     console.log("🎯 CHOIX DE L'UTILISATEUR :");
