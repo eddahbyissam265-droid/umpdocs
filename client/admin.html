@@ -124,7 +124,33 @@
             Publier l'annonce
         </button>
     </form>
-</section>
+</section>*
+
+<!-- ============================================ -->
+<!-- 📂 FORMULAIRE POUR LES DOCUMENTS DE CONCOURS -->
+<!-- ============================================ -->
+<div class="formulaire-document" style="background: white; padding: 20px; border-radius: 8px; margin-top: 30px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+    <h3 style="margin-top: 0; color: #2c3e50;">📂 Ajouter un document de Concours</h3>
+    
+    <form id="form-document">
+        <input type="text" id="titreDocument" placeholder="Ex: Épreuve de Mathématiques" required style="width: 100%; padding: 10px; margin-bottom: 15px;">
+        
+        <select id="categorieDocument" required style="width: 100%; padding: 10px; margin-bottom: 15px;">
+            <option value="">-- Choisir une catégorie --</option>
+            <option value="ENSA"> Cycle Ingénieur (ENSA)</option>
+            <option value="MASTER">🎓 Masters </option>
+            <option value="EXCELLENCE"> Licence d'Excellence</option>
+            <option value="BACHELOR"> Bachelor</option>
+        </select>
+
+        <input type="number" id="anneeDocument" placeholder="Année (Ex: 2024)" required style="width: 100%; padding: 10px; margin-bottom: 15px;">
+        
+        <label for="fichierPdf" style="display: block; margin-bottom: 5px; font-weight: bold;">Fichier PDF :</label>
+        <input type="file" id="fichierPdf" accept=".pdf" required style="margin-bottom: 15px;">
+        
+        <button type="submit" style="background-color: #28a745; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; width: 100%;">Mettre en ligne le document</button>
+    </form>
+</div>
     </main>
 
     <!-- Pied de page -->

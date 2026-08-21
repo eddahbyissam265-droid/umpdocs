@@ -111,13 +111,83 @@
         </div>
     </div>
 </nav>
+<!-- En-tête -->
+<div style="text-align: center; padding: 40px 20px; background-color: #2c3e50; color: white;">
+    <h1 style="margin: 0; font-size: 2.5em;">📂 Sujets & Documents de Concours</h1>
+    <p style="margin-top: 10px; font-size: 1.1em;">Téléchargez les anciennes épreuves pour préparer vos examens.</p>
+</div>
 
+<div style="max-width: 1000px; margin: 40px auto; padding: 0 20px; font-family: sans-serif;">
+
+    <!-- SECTION ENSA -->
+    <h2 style="color: #17a2b8; border-bottom: 2px solid #17a2b8; padding-bottom: 5px;">🚀 Cycle Ingénieur (ENSA)</h2>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+        <tr style="background-color: #f8f9fa; border-bottom: 2px solid #ddd; text-align: left;">
+            <th style="padding: 12px;">Nom du Document</th>
+            <th style="padding: 12px;">Année</th>
+            <th style="padding: 12px; text-align: right;">Action</th>
+        </tr>
+        <tbody id="liste-ensa">
+            <!-- Les documents ENSA apparaîtront ici -->
+        </tbody>
+    </table>
+
+    <!-- SECTION MASTER -->
+    <h2 style="color: #28a745; border-bottom: 2px solid #28a745; padding-bottom: 5px;">🎓 Masters Spécialisés</h2>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+        <tr style="background-color: #f8f9fa; border-bottom: 2px solid #ddd; text-align: left;">
+            <th style="padding: 12px;">Nom du Document</th>
+            <th style="padding: 12px;">Année</th>
+            <th style="padding: 12px; text-align: right;">Action</th>
+        </tr>
+        <tbody id="liste-master">
+            <!-- Les documents MASTER apparaîtront ici -->
+        </tbody>
+    </table>
+
+</div>
+
+<!-- 🌟 LE SCRIPT QUI RÉCUPÈRE LES DOCUMENTS -->
+<script>
+    async function chargerDocuments() {
+        try {
+            const response = await fetch('/api/documents');
+            const documents = await response.json();
+
+            documents.forEach(doc => {
+                // On crée la ligne du tableau
+                const ligneHtml = `
+                    <tr style="border-bottom: 1px solid #ddd;">
+                        <td style="padding: 12px;">${doc.titre}</td>
+                        <td style="padding: 12px;">${doc.annee}</td>
+                        <td style="padding: 12px; text-align: right;">
+                            <a href="${doc.fichier_url}" target="_blank" download style="background-color: #007bff; color: white; padding: 6px 12px; text-decoration: none; border-radius: 4px; font-size: 0.9em;">📥 Télécharger PDF</a>
+                        </td>
+                    </tr>
+                `;
+
+                // On la range dans la bonne catégorie
+                if (doc.categorie === 'ENSA') {
+                    document.getElementById('liste-ensa').innerHTML += ligneHtml;
+                } else if (doc.categorie === 'MASTER') {
+                    document.getElementById('liste-master').innerHTML += ligneHtml;
+                }
+            });
+        } catch (erreur) {
+            console.error("Erreur lors du chargement :", erreur);
+        }
+    }
+
+    // On lance la fonction dès que la page s'ouvre !
+    chargerDocuments();
+</script>
     <!-- Conteneur Principal -->
     <main class="main-container">
 
         <!-- Section Grille de Documents -->
         <section class="documents-section">
-            <h2>Aucun Concours Disponibles pour le moment</h2>
+            <h2>Concours Disponibles pour le moment</h2>
+
 
 
 <!-- ========================================== -->

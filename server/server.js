@@ -1,22 +1,11 @@
+const express = require('express');
 const multer = require('multer');
 const path = require('path');
-
-// 🌟 CONFIGURATION DE MULTER (Pour dire où et comment ranger les images)
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'client/uploads/'); // Le dossier qu'on vient de créer
-    },
-    filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname)); // On donne un nom unique
-    }
-});
-const upload = multer({ storage: storage });
-const express = require('express');
 const cors = require('cors');
 
 console.log("Démarrage en cours, veuillez patienter...");
 
-// 1. Initialisation de l'application (doit toujours être en haut !)
+// 1. Initialisation de l'application
 const app = express();
 
 // 2. Middlewares de base
@@ -29,60 +18,65 @@ app.use((req, res, next) => {
     next();
 });
 
-// 4. Dossiers statiques (pour l'image, le CSS, le JS)
+// 4. Dossiers statiques (CORRIGÉ : pointe bien vers client/uploads)
 app.use(express.static(path.join(__dirname, '../client')));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '../client/uploads')));
 
-// 5. Importation de la base de données Supabase
+// 5. Importation de la base de données
 const db = require('./config/db'); 
 
-// ==========================================
-// ROUTES API : DOCUMENTS
-// ==========================================
-app.use('/api/documents', require('./routes/docRoutes'));
+// 🌟 CONFIGURATION DE MULTER
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'client/uploads/'); 
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + path.extname(file.originalname)); 
+    }
+});
+const upload = multer({ storage: storage });
 
+// ==========================================
+// ROUTES API : DOCUMENTS DE CONCOURS
+// ==========================================
+const docRoutes = require('./routes/docRoutes');
+app.use('/api/documents', docRoutes);
 
 // ==========================================
-// ROUTES API : ANNONCES (PostgreSQL)
+// ROUTES API : ANNONCES
 // ==========================================
 
-// A. Ajouter une nouvelle annonce (POST)
-// A. Ajouter une nouvelle annonce (POST) avec prise en charge de l'image
+// A. Ajouter une nouvelle annonce
 app.post('/api/annonces', upload.single('image'), async (req, res) => {
     try {
         const { titre, contenu, couleur } = req.body;
-        
-        // 🌟 NOUVEAU : Si une image est là, on fabrique son lien, sinon c'est null
         const imageUrl = req.file ? '/uploads/' + req.file.filename : null;
 
-        // 🌟 NOUVEAU : On ajoute image_url dans la base de données
         const query = 'INSERT INTO annonces (titre, contenu, couleur, image_url) VALUES ($1, $2, $3, $4) RETURNING *';
         const values = [titre, contenu, couleur || '#17a2b8', imageUrl];
         
         const result = await db.query(query, values);
-        
         res.status(201).json({ message: "Annonce publiée avec succès", annonce: result.rows[0] });
     } catch (erreur) {
         console.error("Erreur création annonce :", erreur);
         res.status(500).json({ message: "Erreur serveur" });
     }
 });
-// B. Supprimer une annonce (DELETE)
+
+// B. Supprimer une annonce
 app.delete('/api/annonces/:id', async (req, res) => {
     try {
         const idAnnonce = req.params.id;
-        
-        // On demande à la base de données de supprimer la ligne correspondante
         const query = 'DELETE FROM annonces WHERE id = $1';
         await db.query(query, [idAnnonce]);
-        
         res.status(200).json({ message: "Annonce supprimée avec succès" });
     } catch (erreur) {
         console.error("Erreur lors de la suppression :", erreur);
         res.status(500).json({ message: "Erreur serveur lors de la suppression" });
     }
 });
-// B. Récupérer toutes les annonces (GET) - C'est celle-ci qui te manquait !
+
+// C. Récupérer toutes les annonces
 app.get('/api/annonces', async (req, res) => {
     try {
         const query = 'SELECT * FROM annonces ORDER BY date_added DESC';
@@ -93,7 +87,8 @@ app.get('/api/annonces', async (req, res) => {
             titre: row.titre,
             contenu: row.contenu,
             couleur: row.couleur,
-            date: row.date_added
+            date: row.date_added,
+            image_url: row.image_url // 🌟 AJOUTÉ : Pour que l'image s'affiche enfin !
         }));
         
         res.status(200).json(annoncesFiltrees);
@@ -108,6 +103,29 @@ app.get('/api/annonces', async (req, res) => {
 // ==========================================
 const PORT = process.env.PORT || 3000;
 
+// 🛠️ ROUTE TEMPORAIRE POUR RÉPARER LA TABLE DES DOCUMENTS
+app.get('/api/reparer-documents', async (req, res) => {
+    try {
+        // 1. On détruit l'ancienne table cassée
+        await db.query('DROP TABLE IF EXISTS documents CASCADE;');
+        
+        // 2. On recrée la table avec la fameuse colonne "annee"
+        const query = `
+            CREATE TABLE documents (
+                id SERIAL PRIMARY KEY,
+                titre VARCHAR(255) NOT NULL,
+                categorie VARCHAR(50) NOT NULL,
+                annee INTEGER,
+                fichier_url VARCHAR(255) NOT NULL,
+                date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        `;
+        await db.query(query);
+        res.send('✅ Table réparée avec succès ! La colonne "annee" est bien là !');
+    } catch (erreur) {
+        res.send('❌ Erreur : ' + erreur.message);
+    }
+});
 app.listen(PORT, () => {
     console.log(`=========================================`);
     console.log(`🚀 Serveur UMPDocs démarré sur le port ${PORT}`);
