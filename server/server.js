@@ -102,30 +102,8 @@ app.get('/api/annonces', async (req, res) => {
 // DÉMARRAGE DU SERVEUR
 // ==========================================
 const PORT = process.env.PORT || 3000;
-
 // 🛠️ ROUTE TEMPORAIRE POUR RÉPARER LA TABLE DES DOCUMENTS
-app.get('/api/reparer-documents', async (req, res) => {
-    try {
-        // 1. On détruit l'ancienne table cassée
-        await db.query('DROP TABLE IF EXISTS documents CASCADE;');
-        
-        // 2. On recrée la table avec la fameuse colonne "annee"
-        const query = `
-            CREATE TABLE documents (
-                id SERIAL PRIMARY KEY,
-                titre VARCHAR(255) NOT NULL,
-                categorie VARCHAR(50) NOT NULL,
-                annee INTEGER,
-                fichier_url VARCHAR(255) NOT NULL,
-                date_creation TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-        `;
-        await db.query(query);
-        res.send('✅ Table réparée avec succès ! La colonne "annee" est bien là !');
-    } catch (erreur) {
-        res.send('❌ Erreur : ' + erreur.message);
-    }
-});
+
 app.listen(PORT, () => {
     console.log(`=========================================`);
     console.log(`🚀 Serveur UMPDocs démarré sur le port ${PORT}`);
