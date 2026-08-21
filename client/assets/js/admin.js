@@ -1,4 +1,6 @@
-// Demande le mot de passe à l'ouverture de la page et le mémorise
+// ==========================================
+// 1. SÉCURITÉ ET MOT DE PASSE
+// ==========================================
 const adminPassword = sessionStorage.getItem('adminPassword') || prompt("🔒 Veuillez entrer le mot de passe administrateur pour accéder à cette page :");
 
 if (adminPassword) {
@@ -6,7 +8,10 @@ if (adminPassword) {
 } else {
     alert("⚠️ Vous naviguez en mode visiteur. Vous ne pourrez pas modifier la base de données.");
 }
-// Dictionnaire complet des filières, semestres et modules
+
+// ==========================================
+// 2. DICTIONNAIRE DES FILIÈRES ET MODULES
+// ==========================================
 const dataModules = {
     "MIP Math": {
         "S1": ["Analyse 1", "Algèbre 1", "Algèbre 2", "Mécanique du point", "Thermodynamique", "Algorithmique et programmation Python 1", "Méthodologie du Travail Universitaire"],
@@ -56,45 +61,27 @@ const dataModules = {
         "S5": ["Chimie organique Fonctionnelle", "Chimie quantique et Modélisation", "Chimie du Solide et méthodes de caractérisation", "Cinétique chimique et Catalyse", "Electrochimie", "Innovation et gestion de projet", "Anglais"],
         "S6": ["Chimie des hétérocycles", "Produits Naturels", "Grandes réactions en chimie organique (Anglais)", "Chimie Macromoléculaire", "Techniques chromatographique Instrumentales", "Culture entrepreunariale", "Anglais"]
     },
-    // ==========================================
-    // NOUVEAU : MODULES SPÉCIFIQUES AUX CONCOURS
-    // ==========================================
-    "Master": {
-        "Aucun": ["Analyse", "Algèbre", "Électricité", "Électronique", "Mécanique", "Thermodynamique", "Optique", "Informatique Générale", "Sujet Complet"]
-    },
-    "Ingenieur": {
-        "Aucun": ["Analyse", "Algèbre", "Électricité", "Électronique", "Mécanique", "Thermodynamique", "Optique", "Informatique Générale", "Sujet Complet"]
-    },
-    "CRMEF": {
-        "Aucun": ["Analyse", "Algèbre", "Électricité", "Électronique", "Mécanique", "Thermodynamique", "Optique", "Informatique Générale", "Sujet Complet"]
-    },
-    // ==========================================
-    // NOUVEAU : MODULES POUR LA BIBLIOTHÈQUE
-    // ==========================================
-    "Livre Math": {
-        "Aucun": ["Analyse", "Algèbre", "Probabilités", "Topologie", "Recherche Opérationnelle", "Ouvrage Général"]
-    },
-    "Livre Physique": {
-        "Aucun": ["Mécanique", "Thermodynamique", "Électromagnétisme", "Optique", "Physique Quantique", "Ouvrage Général"]
-    },
-    "Livre Info": {
-        "Aucun": ["Algorithmique", "Programmation (C, Python, Java...)", "Bases de données", "Réseaux", "Intelligence Artificielle", "Ouvrage Général"]
-    },
+    "Master": { "Aucun": ["Analyse", "Algèbre", "Électricité", "Électronique", "Mécanique", "Thermodynamique", "Optique", "Informatique Générale", "Sujet Complet"] },
+    "Ingenieur": { "Aucun": ["Analyse", "Algèbre", "Électricité", "Électronique", "Mécanique", "Thermodynamique", "Optique", "Informatique Générale", "Sujet Complet"] },
+    "CRMEF": { "Aucun": ["Analyse", "Algèbre", "Électricité", "Électronique", "Mécanique", "Thermodynamique", "Optique", "Informatique Générale", "Sujet Complet"] },
+    "Livre Math": { "Aucun": ["Analyse", "Algèbre", "Probabilités", "Topologie", "Recherche Opérationnelle", "Ouvrage Général"] },
+    "Livre Physique": { "Aucun": ["Mécanique", "Thermodynamique", "Électromagnétisme", "Optique", "Physique Quantique", "Ouvrage Général"] },
+    "Livre Info": { "Aucun": ["Algorithmique", "Programmation (C, Python, Java...)", "Bases de données", "Réseaux", "Intelligence Artificielle", "Ouvrage Général"] }
 };
 
-// Fonction pour mettre à jour les modules
+// ==========================================
+// 3. GESTION DU FORMULAIRE DES COURS CLASSIQUES
+// ==========================================
 function updateModules() {
-    const filiere = document.getElementById('filiereAdmin').value;
-    const semestre = document.getElementById('semestreAdmin').value;
+    const filiere = document.getElementById('filiereAdmin')?.value;
+    const semestre = document.getElementById('semestreAdmin')?.value;
     const moduleSelect = document.getElementById('module');
     
-    // On vide l'ancien menu
+    if (!moduleSelect) return;
     moduleSelect.innerHTML = '<option value="">-- Sélectionnez un module --</option>';
     
-    // Si la filière et le semestre sont bien choisis
     if (filiere && semestre && dataModules[filiere] && dataModules[filiere][semestre]) {
-        const modules = dataModules[filiere][semestre];
-        modules.forEach(mod => {
+        dataModules[filiere][semestre].forEach(mod => {
             const option = document.createElement('option');
             option.value = mod;
             option.textContent = mod;
@@ -103,178 +90,125 @@ function updateModules() {
     }
 }
 
-// On écoute les changements sur les menus Filière et Semestre
-document.getElementById('filiereAdmin').addEventListener('change', updateModules);
-document.getElementById('semestreAdmin').addEventListener('change', updateModules);
-document.getElementById('uploadForm').addEventListener('submit', async (e) => {
-    e.preventDefault(); // Empêche la page de se recharger
-    
-    const statusDiv = document.getElementById('uploadStatus');
-    const submitBtn = document.querySelector('button[type="submit"]');
-    
-    // On affiche un message d'attente et on bloque le bouton
-    statusDiv.innerHTML = '<p style="color: blue; margin-top: 15px;">⏳ Envoi en cours vers le serveur... Veuillez patienter, cela peut prendre quelques secondes.</p>';
-    submitBtn.disabled = true;
+// SÉCURITÉ : On vérifie que les éléments existent avant d'ajouter des écouteurs
+const menuFiliere = document.getElementById('filiereAdmin');
+if (menuFiliere) menuFiliere.addEventListener('change', updateModules);
 
-    // On prépare TOUTES les données pour la base de données
-    const formData = new FormData();
-    formData.append('title', document.getElementById('title').value);
-    formData.append('module', document.getElementById('module').value);
-    
-    // 👇 ICI C'EST LA CORRECTION : On prend directement la valeur de tes nouveaux menus HTML
-    formData.append('filiere', document.getElementById('filiereAdmin').value);
-    formData.append('semestre', document.getElementById('semestreAdmin').value);
-    
-    // Si tu as ces champs dans ton formulaire HTML, on les prend, sinon valeur par défaut
-    const categoryField = document.getElementById('category');
-    formData.append('category', categoryField ? categoryField.value : 'Cours');
-    
-    formData.append('file', document.getElementById('file').files[0]);
+const menuSemestre = document.getElementById('semestreAdmin');
+if (menuSemestre) menuSemestre.addEventListener('change', updateModules);
 
-    try {
-        // On envoie tout à ton serveur Node.js
-        const response = await fetch('/api/documents', {
-            method: 'POST',
-            headers: {
-                'x-admin-password': adminPassword // 👈 On montre patte blanche au serveur
-            },
-            body: formData
-        });
+const uploadForm = document.getElementById('uploadForm');
+if (uploadForm) {
+    uploadForm.addEventListener('submit', async (e) => {
+        e.preventDefault(); 
+        
+        const statusDiv = document.getElementById('uploadStatus');
+        const submitBtn = document.querySelector('button[type="submit"]');
+        
+        if (statusDiv) statusDiv.innerHTML = '<p style="color: blue; margin-top: 15px;">⏳ Envoi en cours vers le serveur...</p>';
+        if (submitBtn) submitBtn.disabled = true;
 
-        if (response.ok) {
-            statusDiv.innerHTML = '<p style="color: green; margin-top: 15px;">✅ Document mis en ligne avec succès !</p>';
-            document.getElementById('uploadForm').reset(); // On vide le formulaire
-        } else {
-            const errorData = await response.json();
-            statusDiv.innerHTML = `<p style="color: red; margin-top: 15px;">❌ Erreur du serveur : ${errorData.error || 'Échec de l\'envoi'}</p>`;
-        }
-    } catch (error) {
-        console.error('Erreur:', error);
-        statusDiv.innerHTML = '<p style="color: red; margin-top: 15px;">❌ Erreur de connexion avec le serveur.</p>';
-    } finally {
-        submitBtn.disabled = false; // On débloque le bouton
-    }
-});
-// =========================================================
-// SECTION : GESTION ET SUPPRESSION DES DOCUMENTS
-// =========================================================
+        const formData = new FormData();
+        formData.append('title', document.getElementById('title').value);
+        formData.append('module', document.getElementById('module').value);
+        formData.append('filiere', document.getElementById('filiereAdmin').value);
+        formData.append('semestre', document.getElementById('semestreAdmin').value);
+        
+        const categoryField = document.getElementById('category');
+        formData.append('category', categoryField ? categoryField.value : 'Cours');
+        formData.append('file', document.getElementById('file').files[0]);
 
-// 1. Fonction pour charger et afficher les documents dans l'Admin
-async function chargerDocumentsAdmin() {
-    const container = document.getElementById('admin-documents-list');
-    
-    // Si la zone d'affichage n'existe pas sur cette page, on arrête la fonction pour éviter une erreur
-    if (!container) return; 
+        try {
+            const response = await fetch('/api/documents', {
+                method: 'POST',
+                headers: { 'x-admin-password': adminPassword },
+                body: formData
+            });
 
-    try {
-        const response = await fetch('/api/documents');
-        const documents = await response.json();
-
-        container.innerHTML = ''; // On vide le texte de chargement
-
-        if (documents.length === 0) {
-            container.innerHTML = '<p>Aucun document en ligne pour le moment.</p>';
-            return;
-        }
-
-        // On crée une carte avec un bouton Supprimer pour chaque document
-        documents.forEach(doc => {
-            container.innerHTML += `
-                <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-radius: 5px; background-color: #f9f9f9;">
-                    <div>
-                        <h4 style="margin: 0 0 5px 0;">${doc.title}</h4>
-                        <small style="color: #555;">
-    <span style="background: #007bff; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.85em; margin-right: 5px;">
-        ${doc.category}
-    </span>
-    ${doc.filiere} - ${doc.semestre} | <strong>${doc.module}</strong>
-</small>
-                    </div>
-                    <button onclick="supprimerDocument(${doc.id})" style="background-color: #dc3545; color: white; border: none; padding: 8px 15px; cursor: pointer; border-radius: 5px; font-weight: bold;">
-                        Supprimer
-                    </button>
-                </div>
-            `;
-        });
-    } catch (error) {
-        console.error('Erreur:', error);
-        container.innerHTML = '<p style="color: red;">❌ Erreur lors du chargement des documents.</p>';
-    }
-}
-
-// 2. Fonction qui s'active quand on clique sur "Supprimer"
-async function supprimerDocument(idDocument) {
-    // On demande une petite confirmation pour éviter les erreurs de clic
-    if (!confirm("Es-tu sûr de vouloir supprimer ce document définitivement ?")) {
-        return; 
-    }
-
-    try {
-        // On envoie l'ordre de suppression au serveur
-        const response = await fetch(`/api/documents/${idDocument}`, {
-            method: 'DELETE',
-            headers: {
-                'x-admin-password': adminPassword // 👈 On montre patte blanche au serveur
+            if (response.ok) {
+                if (statusDiv) statusDiv.innerHTML = '<p style="color: green; margin-top: 15px;">✅ Document mis en ligne avec succès !</p>';
+                uploadForm.reset(); 
+            } else {
+                const errorData = await response.json();
+                if (statusDiv) statusDiv.innerHTML = `<p style="color: red; margin-top: 15px;">❌ Erreur du serveur : ${errorData.error}</p>`;
             }
-        });
-
-        if (response.ok) {
-            alert("✅ Document supprimé avec succès !");
-            chargerDocumentsAdmin(); // On rafraîchit la liste automatiquement
-        } else {
-            const errorData = await response.json();
-            alert(`❌ Erreur : ${errorData.error || 'Impossible de supprimer'}`);
+        } catch (error) {
+            if (statusDiv) statusDiv.innerHTML = '<p style="color: red; margin-top: 15px;">❌ Erreur de connexion avec le serveur.</p>';
+        } finally {
+            if (submitBtn) submitBtn.disabled = false; 
         }
-    } catch (error) {
-        console.error('Erreur:', error);
-        alert("❌ Erreur de connexion avec le serveur.");
-    }
+    });
 }
 
-// 3. On lance le chargement dès qu'on ouvre la page
-chargerDocumentsAdmin();
 // ==========================================
-// ENVOI D'UNE NOUVELLE ANNONCE AU SERVEUR
+// 4. GESTION DES ANNONCES
 // ==========================================
 const formAnnonce = document.getElementById('form-annonce');
-
 if (formAnnonce) {
     formAnnonce.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Empêche la page de se recharger
+        e.preventDefault(); 
 
-        // On récupère les valeurs tapées par l'admin
         const titre = document.getElementById('titre-annonce').value;
         const contenu = document.getElementById('contenu-annonce').value;
         const couleur = document.getElementById('couleur-annonce').value;
-        
-        // 🌟 NOUVEAU : On récupère l'image si elle existe
         const fichierImage = document.getElementById('imageAnnonce').files[0];
 
-        // 🌟 NOUVEAU : On prépare le "camion" FormData pour envoyer le texte + l'image
         const formData = new FormData();
         formData.append('titre', titre);
         formData.append('contenu', contenu);
         formData.append('couleur', couleur);
-        
-        if (fichierImage) {
-            formData.append('image', fichierImage); // 'image' sera le nom reconnu par le serveur
-        }
+        if (fichierImage) formData.append('image', fichierImage);
 
         try {
-            // ⚠️ ATTENTION : on n'utilise plus JSON ici, le navigateur gère tout seul le bon format !
             const response = await fetch('/api/annonces', {
                 method: 'POST',
-                body: formData // On envoie le camion direct, sans le headers JSON
+                body: formData 
             });
 
             if (response.ok) {
                 alert("📢 Annonce publiée avec succès !");
-                formAnnonce.reset(); // On vide le formulaire
+                formAnnonce.reset(); 
             } else {
                 alert("❌ Erreur lors de la publication de l'annonce.");
             }
         } catch (erreur) {
-            console.error("Erreur réseau :", erreur);
+            alert("❌ Impossible de se connecter au serveur.");
+        }
+    });
+}
+
+// ==========================================
+// 5. GESTION DES DOCUMENTS DE CONCOURS
+// ==========================================
+const formDocument = document.getElementById('form-document');
+if (formDocument) {
+    formDocument.addEventListener('submit', async (e) => {
+        e.preventDefault(); 
+
+        const titre = document.getElementById('titreDocument').value;
+        const categorie = document.getElementById('categorieDocument').value;
+        const annee = document.getElementById('anneeDocument').value;
+        const fichierPdf = document.getElementById('fichierPdf').files[0];
+
+        const formData = new FormData();
+        formData.append('titre', titre);
+        formData.append('categorie', categorie);
+        formData.append('annee', annee);
+        formData.append('fichierPdf', fichierPdf); 
+
+        try {
+            const response = await fetch('/api/documents', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.ok) {
+                alert("✅ Document publié avec succès !");
+                formDocument.reset(); 
+            } else {
+                alert("❌ Erreur lors de la publication du document.");
+            }
+        } catch (erreur) {
             alert("❌ Impossible de se connecter au serveur.");
         }
     });
