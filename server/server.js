@@ -104,6 +104,7 @@ app.get('/api/annonces', async (req, res) => {
 const PORT = process.env.PORT || 3000;
 // 🛠️ ROUTE TEMPORAIRE POUR RÉPARER LA TABLE DES DOCUMENTS
 
+
 app.listen(PORT, () => {
     console.log(`=========================================`);
     console.log(`🚀 Serveur UMPDocs démarré sur le port ${PORT}`);

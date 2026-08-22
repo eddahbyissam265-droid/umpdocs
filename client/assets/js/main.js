@@ -93,10 +93,11 @@ async function chargerDocuments() {
         const documentsOrdinaires = [];
 
         tousLesDocuments.forEach(doc => {
+            const nomAffiche = doc.module || doc.title || "Document"; // S'il n'y a pas de module, on affiche le titre
             
             // 1. SI C'EST UN CONCOURS
-            if (doc.categorie === "Concours") {
-                const lienConcours = `<a href="${doc.lien}" target="_blank" style="background-color: #f8f9fa; color: #333; text-align: left; padding: 10px; border-radius: 5px; text-decoration: none; font-weight: bold; border-left: 4px solid #6f42c1; display: block; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-size: 0.9em;">📄 ${doc.module}</a>`;
+            if (doc.categorie === "Concours" || doc.category === "Concours") {
+                const lienConcours = `<a href="${doc.fichier_url}" target="_blank" style="background-color: #f8f9fa; color: #333; text-align: left; padding: 10px; border-radius: 5px; text-decoration: none; font-weight: bold; border-left: 4px solid #6f42c1; display: block; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-size: 0.9em;">📄 ${nomAffiche}</a>`;
 
                 if (doc.filiere === "Master" && boxMaster) boxMaster.innerHTML += lienConcours;
                 else if (doc.filiere === "Ingenieur" && boxIngenieur) boxIngenieur.innerHTML += lienConcours.replace('#6f42c1', '#fd7e14');
@@ -104,9 +105,8 @@ async function chargerDocuments() {
             } 
             
             // 2. SI C'EST UN LIVRE
-            else if (doc.categorie === "Livre") {
-                // Design spécifique pour les livres (plus compact)
-                const lienLivre = `<a href="${doc.lien}" target="_blank" style="background-color: white; color: #333; text-align: left; padding: 8px; border-radius: 4px; text-decoration: none; font-weight: bold; border-left: 3px solid #007bff; display: block; margin-bottom: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); font-size: 0.85em;">📖 ${doc.module}</a>`;
+            else if (doc.categorie === "Livre" || doc.category === "Livre") {
+                const lienLivre = `<a href="${doc.fichier_url}" target="_blank" style="background-color: white; color: #333; text-align: left; padding: 8px; border-radius: 4px; text-decoration: none; font-weight: bold; border-left: 3px solid #007bff; display: block; margin-bottom: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); font-size: 0.85em;">📖 ${nomAffiche}</a>`;
 
                 if (doc.filiere === "Livre Math" && boxLivreMath) boxLivreMath.innerHTML += lienLivre;
                 else if (doc.filiere === "Livre Physique" && boxLivrePhysique) boxLivrePhysique.innerHTML += lienLivre.replace('#007bff', '#28a745');
@@ -120,7 +120,7 @@ async function chargerDocuments() {
         });
 
         // On affiche les documents normaux
-        afficherDocuments(documentsOrdinaires); 
+        afficherDocuments(documentsOrdinaires);
 
         // ==========================================
         // 🌟 L'ASTUCE DU LIEN MAGIQUE
@@ -156,23 +156,22 @@ function afficherDocuments(documents) {
     documents.forEach(doc => {
         container.innerHTML += `
             <div class="document-card" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; border-radius: 5px; background: white;">
-                <h3>${doc.title}</h3>
-                <p><strong>Module :</strong> ${doc.module}</p>
-                <p><strong>Filière :</strong> ${doc.filiere} | <strong>Semestre :</strong> ${doc.semestre} | <strong>Catégorie :</strong> ${doc.category}</p>
+                <h3>${doc.title || doc.titre || "Sans titre"}</h3>
+                <p><strong>Module :</strong> ${doc.module || "Non défini"}</p>
+                <p><strong>Filière :</strong> ${doc.filiere || "Non définie"} | <strong>Semestre :</strong> ${doc.semestre || "N/A"} | <strong>Catégorie :</strong> ${doc.category || doc.categorie}</p>
                 
                 <!-- 🌟 BOÎTE POUR LES BOUTONS (Télécharger + Copier) -->
                 <div style="display: flex; gap: 15px; align-items: center; margin-top: 10px; margin-bottom: 15px;">
-                    <a href="${doc.file_path}" target="_blank" style="display: inline-block; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
+                    <a href="${doc.fichier_url}" target="_blank" style="display: inline-block; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
                         📥 Télécharger
                     </a>
                     
-                    <!-- LE BOUTON MAGIQUE EST ICI (Version Icône) -->
                     <button onclick="copierLienMagique('${doc.title}')" title="Copier le lien" style="background: none; border: none; cursor: pointer; font-size: 1.4em; padding: 0;">
                         📋
                     </button>
                 </div>
                 
-                <!-- NOUVEAU : SECTION COMMENTAIRES -->
+                <!-- SECTION COMMENTAIRES -->
                 <div style="border-top: 1px solid #eee; padding-top: 10px;">
                     <button onclick="toggleCommentaires(${doc.id})" style="background: none; border: none; color: #6c757d; cursor: pointer; font-weight: bold; padding: 0;">
                         💬 Voir / Ajouter un commentaire
@@ -297,21 +296,21 @@ if (filtreModule) filtreModule.addEventListener('change', filtrerDocuments);
     // (Le doc.filiere d'origine garde ses majuscules, donc ça ne casse pas tes if en dessous !)
     documentsFiltres.forEach(doc => {
         const categorie = doc.categorie || doc.category; 
+        const nomAffiche = doc.module || doc.title || "Document"; // Fallback de sécurité 
 
         if (categorie === "Concours") {
-            const lienConcours = `<a href="${doc.lien}" target="_blank" style="background-color: #f8f9fa; color: #333; text-align: left; padding: 10px; border-radius: 5px; text-decoration: none; font-weight: bold; border-left: 4px solid #6f42c1; display: block; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-size: 0.9em;">📄 ${doc.module}</a>`;
+            const lienConcours = `<a href="${doc.fichier_url}" target="_blank" style="background-color: #f8f9fa; color: #333; text-align: left; padding: 10px; border-radius: 5px; text-decoration: none; font-weight: bold; border-left: 4px solid #6f42c1; display: block; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-size: 0.9em;">📄 ${nomAffiche}</a>`;
             if (doc.filiere === "Master" && boxMaster) boxMaster.innerHTML += lienConcours;
             else if (doc.filiere === "Ingenieur" && boxIngenieur) boxIngenieur.innerHTML += lienConcours.replace('#6f42c1', '#fd7e14');
             else if (doc.filiere === "CRMEF" && boxCrmef) boxCrmef.innerHTML += lienConcours.replace('#6f42c1', '#20c997');
-        } 
+        }
         else if (categorie === "Livre") {
-            const lienLivre = `<a href="${doc.lien}" target="_blank" style="background-color: white; color: #333; text-align: left; padding: 8px; border-radius: 4px; text-decoration: none; font-weight: bold; border-left: 3px solid #007bff; display: block; margin-bottom: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); font-size: 0.85em;">📖 ${doc.module}</a>`;
+            const lienLivre = `<a href="${doc.fichier_url}" target="_blank" style="background-color: white; color: #333; text-align: left; padding: 8px; border-radius: 4px; text-decoration: none; font-weight: bold; border-left: 3px solid #007bff; display: block; margin-bottom: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); font-size: 0.85em;">📖 ${nomAffiche}</a>`;
             if (doc.filiere === "Livre Math" && boxLivreMath) boxLivreMath.innerHTML += lienLivre;
             else if (doc.filiere === "Livre Physique" && boxLivrePhysique) boxLivrePhysique.innerHTML += lienLivre.replace('#007bff', '#28a745');
             else if (doc.filiere === "Livre Info" && boxLivreInfo) boxLivreInfo.innerHTML += lienLivre.replace('#007bff', '#dc3545');
         } 
         else {
-            // Si c'est un cours/TD normal, on le met dans le panier principal
             documentsOrdinaires.push(doc);
         }
     });
