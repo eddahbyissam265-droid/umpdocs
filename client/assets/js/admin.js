@@ -1,4 +1,4 @@
-// ==========================================
+
 // 1. SÉCURITÉ ET MOT DE PASSE
 // ==========================================
 const adminPassword = sessionStorage.getItem('adminPassword') || prompt("🔒 Veuillez entrer le mot de passe administrateur pour accéder à cette page :");
@@ -116,7 +116,7 @@ if (uploadForm) {
         
         const categoryField = document.getElementById('category');
         formData.append('category', categoryField ? categoryField.value : 'Cours');
-        formData.append('file', document.getElementById('file').files[0]);
+        formData.append('fichierPdf', document.getElementById('file').files[0]);
 
         try {
             const response = await fetch('/api/documents', {
