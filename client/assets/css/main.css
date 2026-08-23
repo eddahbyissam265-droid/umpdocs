@@ -511,3 +511,34 @@ footer {
         justify-content: center;
     }
 }
+
+/* ========================================== */
+/* DÉCORATION DU FOND ET SURFACES LATÉRALES   */
+/* ========================================== */
+body {
+    /* Un fond bleu très doux avec un motif géométrique moderne (petits points) */
+    background-color: #f4f9ff;
+    background-image: radial-gradient(#bfdbfe 2px, transparent 2px);
+    background-size: 30px 30px;
+    margin: 0;
+}
+
+.main-container {
+    /* On transforme la zone centrale en une belle "feuille" blanche flottante */
+    background-color: #ffffff;
+    max-width: 1050px; /* Largeur maximale pour laisser voir le décor sur les côtés */
+    margin: 40px auto; /* Centre le conteneur et laisse de l'espace autour */
+    padding: 30px 40px;
+    border-radius: 16px; /* Bords bien arrondis */
+    box-shadow: 0 15px 40px rgba(0, 86, 179, 0.08); /* Ombre bleutée très douce */
+    border: 1px solid #e0f2fe;
+}
+
+/* Ajustement pour que ça reste joli sur les téléphones portables */
+@media (max-width: 768px) {
+    .main-container {
+        margin: 20px 15px;
+        padding: 20px 15px;
+        border-radius: 12px;
+    }
+}
