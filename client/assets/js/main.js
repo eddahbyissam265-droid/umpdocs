@@ -152,26 +152,27 @@ function afficherDocuments(documents) {
         return;
     }
 
-    // 1. LE CERVEAU : On trie les documents par Filière > Semestre > Module
+    // 1. LE NOUVEAU CERVEAU : On trie par Filière > Semestre > Module > CATÉGORIE (Cours, TD...)
     const arborescence = {};
     
     documents.forEach(doc => {
         const filiere = doc.filiere || "Autres Filières";
         const semestre = doc.semestre || "Général";
         const module = doc.module || "Divers";
+        const categorie = doc.category || doc.categorie || "Cours"; // 👈 Le nouveau niveau !
         
         if (!arborescence[filiere]) arborescence[filiere] = {};
         if (!arborescence[filiere][semestre]) arborescence[filiere][semestre] = {};
-        if (!arborescence[filiere][semestre][module]) arborescence[filiere][semestre][module] = [];
+        if (!arborescence[filiere][semestre][module]) arborescence[filiere][semestre][module] = {};
+        if (!arborescence[filiere][semestre][module][categorie]) arborescence[filiere][semestre][module][categorie] = [];
         
-        arborescence[filiere][semestre][module].push(doc);
+        arborescence[filiere][semestre][module][categorie].push(doc);
     });
 
-    // 2. LA CONSTRUCTION HTML DES ACCORDÉONS
+    // 2. LA CONSTRUCTION HTML DES ACCORDÉONS (4 NIVEAUX)
     let html = '';
     
     for (const filiere in arborescence) {
-        // Création d'un ID unique et valide (sans espaces)
         const filiereId = 'filiere-' + filiere.replace(/[^a-zA-Z0-9]/g, '');
         
         html += `
@@ -196,53 +197,71 @@ function afficherDocuments(documents) {
             `;
             
             for (const module in arborescence[filiere][semestre]) {
+                const moduleId = semestreId + '-' + module.replace(/[^a-zA-Z0-9]/g, '');
+                
+                // NOUVEAU : Le module devient lui aussi un dossier cliquable !
                 html += `
                         <div class="module-container">
-                            <div class="module-header">📘 ${module}</div>
+                            <div class="module-header" onclick="toggleDossier('${moduleId}')" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #e0f2fe; padding: 8px 12px; border-radius: 6px; margin-bottom: 5px;">
+                                <span style="color: #0369a1;">📘 ${module}</span>
+                                <span id="icon-${moduleId}" style="font-size: 0.8em; color: #0369a1;">▼</span>
+                            </div>
+                            <div id="${moduleId}" class="module-content hidden" style="padding-left: 10px; border-left: 2px solid #e0f2fe; margin-left: 5px;">
                 `;
                 
-                arborescence[filiere][semestre][module].forEach(doc => {
-                    const titre = doc.title || doc.titre || "Document sans titre";
-                    const categorie = doc.category || doc.categorie || "Cours";
-                    const safeTitle = titre.replace(/'/g, "\\'"); // Sécurité pour les apostrophes
+                // NOUVEAU : On regroupe les documents par catégorie (Cours, TD, Examens...)
+                for (const categorie in arborescence[filiere][semestre][module]) {
                     
-                    html += `
-                            <div class="doc-item" style="display: flex; flex-direction: column;">
-                                <!-- Ligne principale du document -->
-                                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                    <div>
-                                        <strong>${titre}</strong>
-                                        <span style="font-size: 0.75em; color: #0056b3; background: #e0f2fe; padding: 2px 8px; border-radius: 12px; margin-left: 8px; font-weight: bold;">
-                                            ${categorie}
-                                        </span>
-                                    </div>
-                                    <div style="display: flex; gap: 10px; align-items: center;">
-                                        <button onclick="copierLienMagique('${safeTitle}')" title="Copier le lien" style="background: none; border: none; cursor: pointer; font-size: 1.2em; padding: 0;">📋</button>
-                                        <a href="${doc.fichier_url}" target="_blank" class="btn-telecharger">📥 Ouvrir</a>
-                                    </div>
-                                </div>
+                    // On choisit un petit emoji sympa selon la catégorie
+                    let catIcon = "📄";
+                    if (categorie.toLowerCase().includes("td") || categorie.toLowerCase().includes("exercice")) catIcon = "📝";
+                    if (categorie.toLowerCase().includes("examen") || categorie.toLowerCase().includes("contrôle")) catIcon = "🎓";
+                    if (categorie.toLowerCase().includes("résumé")) catIcon = "💡";
 
-                                <!-- Section Commentaires (Cachée par défaut) -->
-                                <div style="border-top: 1px dashed #e2e8f0; margin-top: 10px; padding-top: 8px;">
-                                    <button onclick="toggleCommentaires(${doc.id})" style="background: none; border: none; color: #64748b; cursor: pointer; font-size: 0.85em; font-weight: bold; padding: 0;">
-                                        💬 Voir / Ajouter un commentaire
-                                    </button>
-                                    
-                                    <div id="zone-commentaires-${doc.id}" style="display: none; margin-top: 10px;">
-                                        <div id="liste-commentaires-${doc.id}" style="max-height: 120px; overflow-y: auto; background: #f8fafd; padding: 10px; border-radius: 4px; margin-bottom: 8px; font-size: 0.85em; border: 1px solid #e2e8f0;">
-                                            <!-- Les commentaires apparaîtront ici -->
+                    html += `
+                                <div style="margin-top: 15px; margin-bottom: 10px; font-weight: bold; color: #475569; font-size: 0.95em; border-bottom: 1px solid #e2e8f0; padding-bottom: 4px;">
+                                    ${catIcon} ${categorie}
+                                </div>
+                    `;
+
+                    // On affiche enfin les documents de cette catégorie
+                    arborescence[filiere][semestre][module][categorie].forEach(doc => {
+                        const titre = doc.title || doc.titre || "Document sans titre";
+                        const safeTitle = titre.replace(/'/g, "\\'");
+                        
+                        html += `
+                                <div class="doc-item" style="display: flex; flex-direction: column;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                        <div>
+                                            <strong>${titre}</strong>
                                         </div>
-                                        <div style="display: flex; gap: 5px;">
-                                            <input type="text" id="input-comment-${doc.id}" placeholder="Votre commentaire..." style="flex: 1; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.9em;">
-                                            <button onclick="envoyerCommentaire(${doc.id})" style="background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9em; font-weight:bold;">Envoyer</button>
+                                        <div style="display: flex; gap: 10px; align-items: center;">
+                                            <button onclick="copierLienMagique('${safeTitle}')" title="Copier le lien" style="background: none; border: none; cursor: pointer; font-size: 1.2em; padding: 0;">📋</button>
+                                            <a href="${doc.fichier_url}" target="_blank" class="btn-telecharger">📥 Ouvrir</a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Section Commentaires -->
+                                    <div style="border-top: 1px dashed #e2e8f0; margin-top: 10px; padding-top: 8px;">
+                                        <button onclick="toggleCommentaires(${doc.id})" style="background: none; border: none; color: #64748b; cursor: pointer; font-size: 0.85em; font-weight: bold; padding: 0;">
+                                            💬 Voir / Ajouter un commentaire
+                                        </button>
+                                        
+                                        <div id="zone-commentaires-${doc.id}" style="display: none; margin-top: 10px;">
+                                            <div id="liste-commentaires-${doc.id}" style="max-height: 120px; overflow-y: auto; background: #f8fafd; padding: 10px; border-radius: 4px; margin-bottom: 8px; font-size: 0.85em; border: 1px solid #e2e8f0;">
+                                            </div>
+                                            <div style="display: flex; gap: 5px;">
+                                                <input type="text" id="input-comment-${doc.id}" placeholder="Votre commentaire..." style="flex: 1; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.9em;">
+                                                <button onclick="envoyerCommentaire(${doc.id})" style="background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9em; font-weight:bold;">Envoyer</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                    `;
-                });
+                        `;
+                    });
+                }
                 
-                html += `</div> <!-- Fin module -->`;
+                html += `</div></div> <!-- Fin module -->`;
             }
             html += `</div></div> <!-- Fin semestre -->`;
         }
@@ -251,7 +270,7 @@ function afficherDocuments(documents) {
     
     conteneur.innerHTML = html;
     
-    // NOUVEAU : Si on cherche un mot, on ouvre tous les dossiers automatiquement !
+    // Auto-ouverture en cas de recherche
     const barre = document.getElementById('barreRecherche');
     if (barre && barre.value.trim() !== "") {
         document.querySelectorAll('.hidden').forEach(el => el.classList.remove('hidden'));
