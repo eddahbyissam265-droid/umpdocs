@@ -2,70 +2,11 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <!-- BALISE VITALE POUR LE RESPONSIVE MOBILE -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎓 biblio-UMP - Les cours de la Faculté</title>
     <link rel="stylesheet" href="assets/css/main.css">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link rel="icon" href="data:,">
-    
-    <!-- ========================================== -->
-    <!-- STYLE POUR LA BARRE DE NAVIGATION (MOBILE) -->
-    <!-- ========================================== -->
-    <style>
-        .fsdocs-navbar {
-            background-color: #2c3e50;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 40px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            gap: 20px;
-        }
-        .fsdocs-boutons {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .fsdocs-boutons a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            padding: 8px 12px;
-            border-radius: 4px;
-            white-space: nowrap;
-            transition: background-color 0.3s;
-        }
-        .fsdocs-boutons a:hover {
-            background-color: rgba(255,255,255,0.2);
-        }
-        .zone-google {
-            text-align: right; 
-            color: black; 
-            white-space: nowrap;
-        }
-        
-        /* MAGIE POUR LE MOBILE */
-        @media (max-width: 768px) {
-            .fsdocs-navbar {
-                flex-direction: column;
-                padding: 15px 10px;
-                gap: 15px;
-            }
-            .fsdocs-boutons {
-                gap: 8px;
-            }
-            .zone-google {
-                text-align: center;
-                width: 100%;
-                display: flex;
-                justify-content: center;
-            }
-        }
-    </style>
 </head>
 <body>
 
@@ -73,7 +14,6 @@
 <!-- BARRE DE NAVIGATION (MENU PRINCIPAL)       -->
 <!-- ========================================== -->
 <nav class="fsdocs-navbar">
-    
     <!-- 1. Logo (À gauche) -->
     <div style="font-weight: bold; font-size: 1.5em; white-space: nowrap;">
         <a href="index.html" style="color: white; text-decoration: none;">🎓 biblio-UMP </a>
@@ -82,16 +22,15 @@
     <!-- 2. Les Boutons (Au centre) -->
     <div class="fsdocs-boutons">
         <a href="index.html" class="nav-link">🏠 Accueil</a>
-<a href="bibliotheque.html" class="nav-link">📚 Bibliothèque</a>
-<a href="annonces.html" class="nav-link">📢 Annonces</a>
-<a href="concours.html" class="nav-link">🎓 Concours</a>
+        <a href="bibliotheque.html" class="nav-link">📚 Bibliothèque</a>
+        <a href="annonces.html" class="nav-link">📢 Annonces</a>
+        <a href="concours.html" class="nav-link">🎓 Concours</a>
         <a href="admin.html" id="btn-admin" style="display: none; color: #ffc107; font-weight: bold;">⚙️ Espace Admin</a>
-        <a href="#contact">✉️ Contact</a>
+        <a href="#contact" style="color: white; text-decoration: none; margin-left: 15px;">✉️ Contact</a>
     </div>
 
     <!-- 3. Zone Utilisateur (À droite) -->
     <div id="zoneUtilisateur" class="zone-google">
-        <!-- Le moteur de connexion Google -->
         <div id="g_id_onload"
              data-client_id="265258547962-3l1s0l3ep99tg6ej2bk1ovgc78962euc.apps.googleusercontent.com"
              data-context="signin"
@@ -99,8 +38,6 @@
              data-callback="handleGoogleLogin"
              data-auto_prompt="false">
         </div>
-        
-        <!-- L'affichage visuel du bouton -->
         <div class="g_id_signin"
              data-type="standard"
              data-shape="rectangular"
@@ -112,126 +49,65 @@
     </div>
 </nav>
 
-    <!-- Conteneur Principal -->
-    <main class="main-container">
-
-        <!-- Section Titre et Recherche -->
-        <!-- ========================================== -->
-<!-- SECTION : HERO (BIENVENUE + IMAGE)         -->
 <!-- ========================================== -->
-<section class="hero-section">
-    <div class="hero-container">
+<!-- CONTENEUR PRINCIPAL                        -->
+<!-- ========================================== -->
+<main class="main-container">
+
+    <!-- SECTION : HERO (BIENVENUE + IMAGE) -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <div class="hero-text">
+                <h1 class="hero-title">Bienvenue sur <span class="highlight">biblio-UMP</span> 🎓</h1>
+                <p class="hero-subtitle">
+                    Votre bibliothèque numérique intelligente. Accédez facilement à vos cours, TD, examens récents et ressources exclusives pour réussir votre année.
+                </p>
+                <div class="hero-actions">
+                    <a href="#bibliotheque-section" class="btn-primary">Explorer les cours</a>
+                    <a href="annonces.html" class="btn-secondary">Voir les nouveautés</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="assets/img/hero2.png" alt="Étudiants FSdocs">
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION : NOUVELLE BIBLIOTHÈQUE EN DOSSIERS -->
+    <section id="bibliotheque-section" style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
+        <h2 style="color: #0056b3; text-align: center; margin-bottom: 20px;">📚 Bibliothèque Numérique</h2>
         
-        <!-- Colonne Gauche : Le Texte -->
-        <div class="hero-text">
-            <h1 class="hero-title">Bienvenue sur <span class="highlight">biblio-UMP</span> 🎓</h1>
-            <p class="hero-subtitle">
-                Votre bibliothèque numérique intelligente. Accédez facilement à vos cours, TD, examens récents et ressources exclusives pour réussir votre année.
-            </p>
-            <div class="hero-actions">
-                <a href="#documents" class="btn-primary">Explorer les cours</a>
-                <a href="#annonces" class="btn-secondary">Voir les nouveautés</a>
-            </div>
+        <!-- Barre de recherche stylisée 🔍 -->
+        <div style="text-align: center; margin-bottom: 30px;">
+            <input type="text" id="barreRecherche" placeholder="🔍 Rechercher un cours, un module..." 
+                   style="width: 100%; max-width: 500px; padding: 12px 20px; border: 2px solid #bfdbfe; border-radius: 25px; font-size: 1em; outline: none; transition: border-color 0.3s; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
         </div>
 
-        <!-- Colonne Droite : L'Image -->
-        <div class="hero-image">
-            <!-- J'ai mis une image d'illustration en ligne pour que tu puisses tester tout de suite. 
-                 Plus tard, tu pourras la remplacer par une image de ton dossier assets. -->
-            <img src="assets\img\hero2.png" alt="Étudiants FSdocs">
+        <!-- Zone où le JS va injecter les dossiers -->
+        <div id="conteneur-dossiers">
+            <p style="text-align: center; color: #64748b;">⏳ Chargement des documents en cours...</p>
         </div>
+    </section>
 
-    </div>
-</section>
+</main>
 
-        <!-- Section Grille de Documents -->
-        <section class="documents-section">
-            <h2>Documents Disponibles</h2>
-            <!-- ZONE DE RECHERCHE ET FILTRES -->
-<div class="recherche-container" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-    
-    <!-- L'UNIQUE barre de recherche -->
-    <input type="text" id="barreRecherche" placeholder="🔍 Chercher un module, un titre..." style="padding: 8px; flex: 1; min-width: 200px; border-radius: 5px; border: 1px solid #ccc;">
-    
-    <!-- Filtre Filière -->
-    <select id="filtreFiliere" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-        <option value="">Toutes les filières</option>
-        <option value="MIP Math">MIP Math</option>
-        <option value="MIP Informatique">MIP Informatique</option>
-        <option value="TC Informatiques Appliquées">TC Informatiques Appliquées</option>
-        <option value="Licence de Physique PC-P">Licence de Physique PC-P</option>
-        <option value="Licence de Chimie PC-C">Licence de Chimie PC-C</option>
-        <option value="EGC">EGC</option>
-    </select>
-
-    <!-- Filtre Semestre -->
-    <select id="filtreSemestre" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-        <option value="">Tous les semestres</option>
-        <option value="S1">S1</option>
-        <option value="S2">S2</option>
-        <option value="S3">S3</option>
-        <option value="S4">S4</option>
-        <option value="S5">S5</option>
-        <option value="S6">S6</option>
-    </select>
-
-    <!-- Filtre Module intelligent -->
-    <select id="filtreModule" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-        <option value="">Tous les modules</option>
-    </select>
-
-    <!-- Filtre Catégorie (CELUI QUE J'AVAIS OUBLIÉ ! 😅) -->
-    <select id="filtreCategorie" style="padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-        <option value="">Toutes les catégories</option>
-        <option value="Cours">Cours</option>
-        <option value="TD">TD / Exercices</option>
-        <option value="Examens">Examens / Contrôles</option>
-        <option value="Résumé">Résumé</option>
-    </select>
-    
-</div>
-            <div id="documents-container" class="documents-grid">
-                <!-- Les cartes de documents seront ajoutées dynamiquement ici par main.js -->
-            </div>
-        </section>
-
-
-<!-- ========================================== -->
-<!-- PIED DE PAGE (FOOTER)                      -->
-<!-- ========================================== -->
-<footer id="contact" style="text-align: center; padding: 20px; margin-top: 50px; border-top: 1px solid #e0e0e0; color: #666; font-size: 0.9em; background-color: #f8f9fa;">
-    <!-- Le reste de ton footer est ici... -->
-    </main>
-
-    <!-- Pied de page -->
-    <footer>
-        <p>&copy; 2026 biblio-UMP - Tous droits réservés</p>
-    </footer>
-
-    <script src="assets/js/main.js?v=5"></script>
-<!-- ========================================== -->
-<!-- PIED DE PAGE (FOOTER)                      -->
-<!-- ========================================== -->
 <!-- ========================================== -->
 <!-- PIED DE PAGE (FOOTER)                      -->
 <!-- ========================================== -->
 <footer id="contact" style="text-align: center; padding: 20px; margin-top: 50px; border-top: 1px solid #e0e0e0; color: #666; font-size: 0.9em; background-color: #f8f9fa;">
     <p style="margin: 5px 0;">🎓 biblio-UMP - La plateforme de documents de la Faculté des Sciences</p>
     
-    <!-- SECTION CONTACT -->
     <div style="margin: 15px 0;">
-        <a href="mailto:eddahbyissam265@gmail.com" target="_blank" style="text-decoration: none; color: #d44638; margin: 0 10px; font-size: 1.1em; font-weight: bold;">
-            ✉️ Gmail
-        </a>
-        <a href="https://wa.me/212725840624" target="_blank" style="text-decoration: none; color: #25D366; margin: 0 10px; font-size: 1.1em; font-weight: bold;">
-            📱 WhatsApp
-        </a>
-        <a href="https://www.facebook.com/profile.php?id=61593472950491" target="_blank" style="text-decoration: none; color: #1877F2; margin: 0 10px; font-size: 1.1em; font-weight: bold;">
-            📘 Facebook
-        </a>
+        <a href="mailto:eddahbyissam265@gmail.com" target="_blank" style="text-decoration: none; color: #d44638; margin: 0 10px; font-size: 1.1em; font-weight: bold;">✉️ Gmail</a>
+        <a href="https://wa.me/212725840624" target="_blank" style="text-decoration: none; color: #25D366; margin: 0 10px; font-size: 1.1em; font-weight: bold;">📱 WhatsApp</a>
+        <a href="https://www.facebook.com/profile.php?id=61593472950491" target="_blank" style="text-decoration: none; color: #1877F2; margin: 0 10px; font-size: 1.1em; font-weight: bold;">📘 Facebook</a>
     </div>
 
-    <p style="margin: 5px 0;">Créé par <strong>ISSAM</strong> &copy; 2026</p>
+    <p style="margin: 5px 0;">Créé par <strong>ISSAM</strong> &copy; 2026 - Tous droits réservés</p>
 </footer>
+
+<!-- SCRIPT JAVASCRIPT -->
+<script src="assets/js/main.js?v=6"></script>
+
 </body>
 </html>

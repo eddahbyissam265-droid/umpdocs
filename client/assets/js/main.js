@@ -142,58 +142,134 @@ async function chargerDocuments() {
     }
 }
 function afficherDocuments(documents) {
-    console.log("🟢 ÉTAPE 4 : Je prépare l'affichage de", documents.length, "documents.");
-    const container = document.getElementById('documents-container'); 
+    const conteneur = document.getElementById('conteneur-dossiers'); 
+    if (!conteneur) return;
     
-    if (!container) return;
-    container.innerHTML = ''; 
+    conteneur.innerHTML = ''; 
 
     if (documents.length === 0) {
-        container.innerHTML = '<p>Aucun document ne correspond à votre recherche.</p>';
+        conteneur.innerHTML = '<p style="text-align: center; color: #64748b; margin-top: 20px;">Aucun document ne correspond à votre recherche.</p>';
         return;
     }
 
+    // 1. LE CERVEAU : On trie les documents par Filière > Semestre > Module
+    const arborescence = {};
+    
     documents.forEach(doc => {
-        container.innerHTML += `
-            <div class="document-card" style="border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; border-radius: 5px; background: white;">
-                <h3>${doc.title || doc.titre || "Sans titre"}</h3>
-                <p><strong>Module :</strong> ${doc.module || "Non défini"}</p>
-                <p><strong>Filière :</strong> ${doc.filiere || "Non définie"} | <strong>Semestre :</strong> ${doc.semestre || "N/A"} | <strong>Catégorie :</strong> ${doc.category || doc.categorie}</p>
-                
-                <!-- 🌟 BOÎTE POUR LES BOUTONS (Télécharger + Copier) -->
-                <div style="display: flex; gap: 15px; align-items: center; margin-top: 10px; margin-bottom: 15px;">
-                    <a href="${doc.fichier_url}" target="_blank" style="display: inline-block; padding: 10px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">
-                        📥 Télécharger
-                    </a>
-                    
-                    <button onclick="copierLienMagique('${doc.title}')" title="Copier le lien" style="background: none; border: none; cursor: pointer; font-size: 1.4em; padding: 0;">
-                        📋
-                    </button>
-                </div>
-                
-                <!-- SECTION COMMENTAIRES -->
-                <div style="border-top: 1px solid #eee; padding-top: 10px;">
-                    <button onclick="toggleCommentaires(${doc.id})" style="background: none; border: none; color: #6c757d; cursor: pointer; font-weight: bold; padding: 0;">
-                        💬 Voir / Ajouter un commentaire
-                    </button>
-                    
-                    <div id="zone-commentaires-${doc.id}" style="display: none; margin-top: 15px;">
-                        <div id="liste-commentaires-${doc.id}" style="max-height: 150px; overflow-y: auto; background: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 10px; font-size: 0.9em;">
-                            <!-- Les commentaires apparaîtront ici -->
-                        </div>
-                        
-                        <div style="display: flex; gap: 5px;">
-                            <input type="text" id="input-comment-${doc.id}" placeholder="Écrire un commentaire..." style="flex: 1; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                            <button onclick="envoyerCommentaire(${doc.id})" style="background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">
-                                Envoyer
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                
-            </div>
-        `;
+        const filiere = doc.filiere || "Autres Filières";
+        const semestre = doc.semestre || "Général";
+        const module = doc.module || "Divers";
+        
+        if (!arborescence[filiere]) arborescence[filiere] = {};
+        if (!arborescence[filiere][semestre]) arborescence[filiere][semestre] = {};
+        if (!arborescence[filiere][semestre][module]) arborescence[filiere][semestre][module] = [];
+        
+        arborescence[filiere][semestre][module].push(doc);
     });
+
+    // 2. LA CONSTRUCTION HTML DES ACCORDÉONS
+    let html = '';
+    
+    for (const filiere in arborescence) {
+        // Création d'un ID unique et valide (sans espaces)
+        const filiereId = 'filiere-' + filiere.replace(/[^a-zA-Z0-9]/g, '');
+        
+        html += `
+        <div class="filiere-card">
+            <div class="filiere-header" onclick="toggleDossier('${filiereId}')">
+                <span>📁 ${filiere}</span>
+                <span id="icon-${filiereId}">▼</span>
+            </div>
+            <div id="${filiereId}" class="filiere-content hidden">
+        `;
+        
+        for (const semestre in arborescence[filiere]) {
+            const semestreId = filiereId + '-' + semestre.replace(/[^a-zA-Z0-9]/g, '');
+            
+            html += `
+                <div class="semestre-container">
+                    <div class="semestre-header" onclick="toggleDossier('${semestreId}')">
+                        <span>📂 ${semestre}</span>
+                        <span id="icon-${semestreId}" style="float: right; font-size: 0.8em; margin-top: 4px;">▼</span>
+                    </div>
+                    <div id="${semestreId}" class="semestre-content hidden">
+            `;
+            
+            for (const module in arborescence[filiere][semestre]) {
+                html += `
+                        <div class="module-container">
+                            <div class="module-header">📘 ${module}</div>
+                `;
+                
+                arborescence[filiere][semestre][module].forEach(doc => {
+                    const titre = doc.title || doc.titre || "Document sans titre";
+                    const categorie = doc.category || doc.categorie || "Cours";
+                    const safeTitle = titre.replace(/'/g, "\\'"); // Sécurité pour les apostrophes
+                    
+                    html += `
+                            <div class="doc-item" style="display: flex; flex-direction: column;">
+                                <!-- Ligne principale du document -->
+                                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                    <div>
+                                        <strong>${titre}</strong>
+                                        <span style="font-size: 0.75em; color: #0056b3; background: #e0f2fe; padding: 2px 8px; border-radius: 12px; margin-left: 8px; font-weight: bold;">
+                                            ${categorie}
+                                        </span>
+                                    </div>
+                                    <div style="display: flex; gap: 10px; align-items: center;">
+                                        <button onclick="copierLienMagique('${safeTitle}')" title="Copier le lien" style="background: none; border: none; cursor: pointer; font-size: 1.2em; padding: 0;">📋</button>
+                                        <a href="${doc.fichier_url}" target="_blank" class="btn-telecharger">📥 Ouvrir</a>
+                                    </div>
+                                </div>
+
+                                <!-- Section Commentaires (Cachée par défaut) -->
+                                <div style="border-top: 1px dashed #e2e8f0; margin-top: 10px; padding-top: 8px;">
+                                    <button onclick="toggleCommentaires(${doc.id})" style="background: none; border: none; color: #64748b; cursor: pointer; font-size: 0.85em; font-weight: bold; padding: 0;">
+                                        💬 Voir / Ajouter un commentaire
+                                    </button>
+                                    
+                                    <div id="zone-commentaires-${doc.id}" style="display: none; margin-top: 10px;">
+                                        <div id="liste-commentaires-${doc.id}" style="max-height: 120px; overflow-y: auto; background: #f8fafd; padding: 10px; border-radius: 4px; margin-bottom: 8px; font-size: 0.85em; border: 1px solid #e2e8f0;">
+                                            <!-- Les commentaires apparaîtront ici -->
+                                        </div>
+                                        <div style="display: flex; gap: 5px;">
+                                            <input type="text" id="input-comment-${doc.id}" placeholder="Votre commentaire..." style="flex: 1; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; font-size: 0.9em;">
+                                            <button onclick="envoyerCommentaire(${doc.id})" style="background: #10b981; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.9em; font-weight:bold;">Envoyer</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    `;
+                });
+                
+                html += `</div> <!-- Fin module -->`;
+            }
+            html += `</div></div> <!-- Fin semestre -->`;
+        }
+        html += `</div></div> <!-- Fin filiere -->`;
+    }
+    
+    conteneur.innerHTML = html;
+    
+    // NOUVEAU : Si on cherche un mot, on ouvre tous les dossiers automatiquement !
+    const barre = document.getElementById('barreRecherche');
+    if (barre && barre.value.trim() !== "") {
+        document.querySelectorAll('.hidden').forEach(el => el.classList.remove('hidden'));
+        document.querySelectorAll('[id^="icon-"]').forEach(icon => icon.textContent = '▲');
+    }
+}
+
+// 3. FONCTION POUR OUVRIR/FERMER LES DOSSIERS AU CLIC
+function toggleDossier(id) {
+    const element = document.getElementById(id);
+    const icon = document.getElementById('icon-' + id);
+    if (element.classList.contains('hidden')) {
+        element.classList.remove('hidden');
+        icon.textContent = '▲';
+    } else {
+        element.classList.add('hidden');
+        icon.textContent = '▼';
+    }
 }
 
 // ==========================================
@@ -227,54 +303,28 @@ function updateModulesFilter() {
 
 // FILTRAGE DES DOCUMENTS (VERSION FLEXIBLE)
 // ==========================================
+// FILTRAGE INTELLIGENT AVEC LA BARRE DE RECHERCHE
+// ==========================================
 function filtrerDocuments() {
-    // 1. On passe tous les choix en minuscules (.toLowerCase()) pour éviter les bugs de casse
-    // --- SÉCURITÉ POUR LES PAGES SANS FILTRES ---
-const barre = document.getElementById('barreRecherche');
-if (barre) barre.addEventListener('input', filtrerDocuments);
+    const barre = document.getElementById('barreRecherche');
+    const texteRecherche = barre ? barre.value.toLowerCase().trim() : "";
 
-const filtreFiliere = document.getElementById('filtreFiliere');
-if (filtreFiliere) filtreFiliere.addEventListener('change', filtrerDocuments);
-
-const filtreSemestre = document.getElementById('filtreSemestre');
-if (filtreSemestre) filtreSemestre.addEventListener('change', filtrerDocuments);
-
-const filtreCategorie = document.getElementById('filtreCategorie');
-if (filtreCategorie) filtreCategorie.addEventListener('change', filtrerDocuments);
-
-const filtreModule = document.getElementById('filtreModule');
-if (filtreModule) filtreModule.addEventListener('change', filtrerDocuments);
-    const choixModule = moduleSelect ? moduleSelect.value.toLowerCase().trim() : "";
-// --- RADAR DE DÉBOGAGE ---
-    console.log("🎯 CHOIX DE L'UTILISATEUR :");
-    console.log("Filière choisie : '" + choixFiliere + "'");
-    console.log("Nombre total de documents avant filtre :", tousLesDocuments.length);
-    if (tousLesDocuments.length > 0) {
-        console.log("🔍 À QUOI RESSEMBLE UN DOCUMENT :", tousLesDocuments[0]);
-    }
-    // -------------------------
-    // 2. On filtre tous les documents selon la recherche
+    // 1. On filtre les documents
     const documentsFiltres = tousLesDocuments.filter(doc => {
         const titre = doc.title ? doc.title.toLowerCase().trim() : "";
         const moduleDoc = doc.module ? doc.module.toLowerCase().trim() : "";
-        
-        // On met aussi les données du document en minuscules pour la comparaison
         const filiereDoc = doc.filiere ? doc.filiere.toLowerCase().trim() : "";
-        const semestreDoc = doc.semestre ? doc.semestre.toLowerCase().trim() : "";
         const categorieDoc = (doc.category || doc.categorie || "").toLowerCase().trim();
 
-        const matchTexte = texteRecherche === "" || titre.includes(texteRecherche) || moduleDoc.includes(texteRecherche);
-        const matchFiliere = choixFiliere === "" || filiereDoc === choixFiliere;
-        const matchSemestre = choixSemestre === "" || semestreDoc === choixSemestre;
-        const matchCategorie = choixCategorie === "" || categorieDoc === choixCategorie;
-        const matchModule = choixModule === "" || moduleDoc === choixModule || moduleDoc.includes(choixModule) || choixModule.includes(moduleDoc);
-
-        return matchTexte && matchFiliere && matchSemestre && matchCategorie && matchModule;
+        // Si le mot cherché est dans le titre, le module, la filière ou la catégorie !
+        return texteRecherche === "" || 
+               titre.includes(texteRecherche) || 
+               moduleDoc.includes(texteRecherche) ||
+               filiereDoc.includes(texteRecherche) ||
+               categorieDoc.includes(texteRecherche);
     });
 
-    console.log("🔍 Résultat du filtre :", documentsFiltres.length, "document(s) trouvé(s).");
-
-    // 3. On prépare les boîtes pour les trier à l'écran
+    // 2. On prépare les listes (pour garder la compatibilité avec tes pages Concours/Bibliothèque)
     const boxMaster = document.getElementById('liste-masters');
     const boxIngenieur = document.getElementById('liste-ingenieurs');
     const boxCrmef = document.getElementById('liste-crmef');
@@ -282,7 +332,6 @@ if (filtreModule) filtreModule.addEventListener('change', filtrerDocuments);
     const boxLivrePhysique = document.getElementById('liste-livres-physique');
     const boxLivreInfo = document.getElementById('liste-livres-info');
 
-    // On vide toutes les boîtes avant d'afficher les résultats
     if (boxMaster) boxMaster.innerHTML = '';
     if (boxIngenieur) boxIngenieur.innerHTML = '';
     if (boxCrmef) boxCrmef.innerHTML = '';
@@ -292,30 +341,29 @@ if (filtreModule) filtreModule.addEventListener('change', filtrerDocuments);
 
     const documentsOrdinaires = [];
 
-    // 4. On range les résultats de la recherche dans les bonnes cases
-    // (Le doc.filiere d'origine garde ses majuscules, donc ça ne casse pas tes if en dessous !)
+    // 3. On range dans les boîtes
     documentsFiltres.forEach(doc => {
         const categorie = doc.categorie || doc.category; 
-        const nomAffiche = doc.module || doc.title || "Document"; // Fallback de sécurité 
+        const nomAffiche = doc.module || doc.title || "Document";
 
         if (categorie === "Concours") {
-            const lienConcours = `<a href="${doc.fichier_url}" target="_blank" style="background-color: #f8f9fa; color: #333; text-align: left; padding: 10px; border-radius: 5px; text-decoration: none; font-weight: bold; border-left: 4px solid #6f42c1; display: block; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); font-size: 0.9em;">📄 ${nomAffiche}</a>`;
+            const lienConcours = `<a href="${doc.fichier_url}" target="_blank" style="...">📄 ${nomAffiche}</a>`;
             if (doc.filiere === "Master" && boxMaster) boxMaster.innerHTML += lienConcours;
-            else if (doc.filiere === "Ingenieur" && boxIngenieur) boxIngenieur.innerHTML += lienConcours.replace('#6f42c1', '#fd7e14');
-            else if (doc.filiere === "CRMEF" && boxCrmef) boxCrmef.innerHTML += lienConcours.replace('#6f42c1', '#20c997');
-        }
+            else if (doc.filiere === "Ingenieur" && boxIngenieur) boxIngenieur.innerHTML += lienConcours;
+            else if (doc.filiere === "CRMEF" && boxCrmef) boxCrmef.innerHTML += lienConcours;
+        } 
         else if (categorie === "Livre") {
-            const lienLivre = `<a href="${doc.fichier_url}" target="_blank" style="background-color: white; color: #333; text-align: left; padding: 8px; border-radius: 4px; text-decoration: none; font-weight: bold; border-left: 3px solid #007bff; display: block; margin-bottom: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.1); font-size: 0.85em;">📖 ${nomAffiche}</a>`;
+            const lienLivre = `<a href="${doc.fichier_url}" target="_blank" style="...">📖 ${nomAffiche}</a>`;
             if (doc.filiere === "Livre Math" && boxLivreMath) boxLivreMath.innerHTML += lienLivre;
-            else if (doc.filiere === "Livre Physique" && boxLivrePhysique) boxLivrePhysique.innerHTML += lienLivre.replace('#007bff', '#28a745');
-            else if (doc.filiere === "Livre Info" && boxLivreInfo) boxLivreInfo.innerHTML += lienLivre.replace('#007bff', '#dc3545');
+            else if (doc.filiere === "Livre Physique" && boxLivrePhysique) boxLivrePhysique.innerHTML += lienLivre;
+            else if (doc.filiere === "Livre Info" && boxLivreInfo) boxLivreInfo.innerHTML += lienLivre;
         } 
         else {
-            documentsOrdinaires.push(doc);
+            documentsOrdinaires.push(doc); // Les cours classiques !
         }
     });
 
-    // 5. On affiche les documents normaux dans la grande liste principale
+    // 4. On redessine nos beaux dossiers bleus avec les résultats
     afficherDocuments(documentsOrdinaires);
 }
 
