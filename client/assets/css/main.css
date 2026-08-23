@@ -454,3 +454,60 @@ footer {
 .hidden {
     display: none;
 }
+
+/* ========================================== */
+/* STYLE DE LA BARRE DE NAVIGATION (HEADER)   */
+/* ========================================== */
+.fsdocs-navbar {
+    background-color: #0056b3; /* Joli bleu université */
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.fsdocs-navbar a {
+    color: white;
+    text-decoration: none;
+}
+
+.fsdocs-boutons {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.fsdocs-boutons .nav-link {
+    font-weight: 500;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.fsdocs-boutons .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Zone Google à droite */
+.zone-google {
+    display: flex;
+    align-items: center;
+}
+
+/* Version Mobile (Responsive) */
+@media (max-width: 768px) {
+    .fsdocs-navbar {
+        flex-direction: column;
+        padding: 15px;
+        gap: 15px;
+    }
+    .fsdocs-boutons {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
