@@ -2,23 +2,19 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <!-- BALISE VITALE POUR LE RESPONSIVE MOBILE -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎓 biblio-UMP - Les cours de la Faculté</title>
-    <link rel="stylesheet" href="assets/css/main.css?v=2">
+    <title>🎓 biblio-UMP - Bibliothèque</title>
+    <link rel="stylesheet" href="assets/css/main.css?v=3">
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <link rel="icon" href="data:,">
 </head>
 <body>
-<!-- BARRE DE NAVIGATION (MENU PRINCIPAL)       -->
-<!-- ========================================== -->
+
+<!-- BARRE DE NAVIGATION -->
 <nav class="fsdocs-navbar">
-    <!-- 1. Logo (À gauche) -->
     <div style="font-weight: bold; font-size: 1.5em; white-space: nowrap;">
         <a href="index.html" style="color: white; text-decoration: none;">🎓 biblio-UMP </a>
     </div>
-    
-    <!-- 2. Les Boutons (Au centre) -->
     <div class="fsdocs-boutons">
         <a href="index.html" class="nav-link">🏠 Accueil</a>
         <a href="bibliotheque.html" class="nav-link">📚 Bibliothèque</a>
@@ -27,70 +23,43 @@
         <a href="admin.html" id="btn-admin" style="display: none; color: #ffc107; font-weight: bold;">⚙️ Espace Admin</a>
         <a href="#contact" style="color: white; text-decoration: none; margin-left: 15px;">✉️ Contact</a>
     </div>
-
-    <!-- 3. Zone Utilisateur (À droite) -->
     <div id="zoneUtilisateur" class="zone-google">
-        <div id="g_id_onload"
-             data-client_id="265258547962-3l1s0l3ep99tg6ej2bk1ovgc78962euc.apps.googleusercontent.com"
-             data-context="signin"
-             data-ux_mode="popup"
-             data-callback="handleGoogleLogin"
-             data-auto_prompt="false">
-        </div>
-        <div class="g_id_signin"
-             data-type="standard"
-             data-shape="rectangular"
-             data-theme="outline"
-             data-text="signin_with"
-             data-size="large"
-             data-logo_alignment="left">
-        </div>
+        <div id="g_id_onload" data-client_id="265258547962-3l1s0l3ep99tg6ej2bk1ovgc78962euc.apps.googleusercontent.com" data-context="signin" data-ux_mode="popup" data-callback="handleGoogleLogin" data-auto_prompt="false"></div>
+        <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline" data-text="signin_with" data-size="large" data-logo_alignment="left"></div>
     </div>
 </nav>
 
-    <!-- Conteneur Principal -->
-    <main class="main-container">
+<!-- CONTENEUR PRINCIPAL -->
+<main class="main-container">
+    <section style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
+        <h2 style="color: #0056b3; text-align: center; margin-bottom: 30px;">📚 Bibliothèque d'Ouvrages</h2>
+        
+        <!-- Boîtes pour les livres -->
+        <div id="liste-livres-math" style="background: #ffffff; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+            <h3 style="color: #0056b3; margin-top: 0; border-bottom: 2px solid #dbeafe; padding-bottom: 10px;">📘 Mathématiques</h3>
+        </div>
+        
+        <div id="liste-livres-physique" style="background: #ffffff; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+            <h3 style="color: #0056b3; margin-top: 0; border-bottom: 2px solid #dbeafe; padding-bottom: 10px;">📗 Physique</h3>
+        </div>
+        
+        <div id="liste-livres-info" style="background: #ffffff; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e2e8f0; box-shadow: 0 2px 5px rgba(0,0,0,0.05);">
+            <h3 style="color: #0056b3; margin-top: 0; border-bottom: 2px solid #dbeafe; padding-bottom: 10px;">📕 Informatique</h3>
+        </div>
+    </section>
+</main>
 
-        <!-- Section Grille de Documents -->
-        <section class="documents-section">
-            <h2>Aucun Documents Disponibles pour le moments</h2>
-
-<!-- ========================================== -->
-<!-- PIED DE PAGE (FOOTER)                      -->
-<!-- ========================================== -->
-<footer id="contact" style="text-align: center; padding: 20px; margin-top: 50px; border-top: 1px solid #e0e0e0; color: #666; font-size: 0.9em; background-color: #f8f9fa;">
-    <!-- Le reste de ton footer est ici... -->
-    </main>
-
-    <!-- Pied de page -->
-    <footer>
-        <p>&copy; 2026 biblio-UMP - Tous droits réservés</p>
-    </footer>
-
-    <script src="assets/js/main.js?v=5"></script>
-<!-- ========================================== -->
-<!-- PIED DE PAGE (FOOTER)                      -->
-<!-- ========================================== -->
-<!-- ========================================== -->
-<!-- PIED DE PAGE (FOOTER)                      -->
-<!-- ========================================== -->
+<!-- PIED DE PAGE UNIQUE -->
 <footer id="contact" style="text-align: center; padding: 20px; margin-top: 50px; border-top: 1px solid #e0e0e0; color: #666; font-size: 0.9em; background-color: #f8f9fa;">
     <p style="margin: 5px 0;">🎓 biblio-UMP - La plateforme de documents de la Faculté des Sciences</p>
-    
-    <!-- SECTION CONTACT -->
     <div style="margin: 15px 0;">
-        <a href="mailto:eddahbyissam265@gmail.com" target="_blank" style="text-decoration: none; color: #d44638; margin: 0 10px; font-size: 1.1em; font-weight: bold;">
-            ✉️ Gmail
-        </a>
-        <a href="https://wa.me/212725840624" target="_blank" style="text-decoration: none; color: #25D366; margin: 0 10px; font-size: 1.1em; font-weight: bold;">
-            📱 WhatsApp
-        </a>
-        <a href="https://www.facebook.com/profile.php?id=61593472950491" target="_blank" style="text-decoration: none; color: #1877F2; margin: 0 10px; font-size: 1.1em; font-weight: bold;">
-            📘 Facebook
-        </a>
+        <a href="mailto:eddahbyissam265@gmail.com" target="_blank" style="text-decoration: none; color: #d44638; margin: 0 10px; font-size: 1.1em; font-weight: bold;">✉️ Gmail</a>
+        <a href="https://wa.me/212725840624" target="_blank" style="text-decoration: none; color: #25D366; margin: 0 10px; font-size: 1.1em; font-weight: bold;">📱 WhatsApp</a>
+        <a href="https://www.facebook.com/profile.php?id=61593472950491" target="_blank" style="text-decoration: none; color: #1877F2; margin: 0 10px; font-size: 1.1em; font-weight: bold;">📘 Facebook</a>
     </div>
-
-    <p style="margin: 5px 0;">Créé par <strong>ISSAM</strong> &copy; 2026</p>
+    <p style="margin: 5px 0;">Créé par <strong>ISSAM</strong> &copy; 2026 - Tous droits réservés</p>
 </footer>
+
+<script src="assets/js/main.js?v=6"></script>
 </body>
 </html>
