@@ -672,3 +672,164 @@ async function supprimerAnnonce(id) {
         }
     }
 }
+// ==========================================
+// 👤 SYSTÈME DE CONNEXION GOOGLE
+// ==========================================
+
+// Fonction pour décoder la réponse de Google
+function decodeJwtResponse(token) {
+    let base64Url = token.split('.')[1];
+    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    let jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+}
+
+// Quand l'étudiant clique sur le bouton Google et réussit à se connecter
+function handleGoogleLogin(response) {
+    const payload = decodeJwtResponse(response.credential);
+    
+    // On crée un objet avec ses infos
+    const utilisateur = {
+        google_id: payload.sub,
+        nom: payload.name,
+        email: payload.email,
+        photo: payload.picture
+    };
+
+    // On sauvegarde l'utilisateur dans la mémoire du navigateur
+    localStorage.setItem('utilisateur_biblio', JSON.stringify(utilisateur));
+    
+    // On met à jour l'affichage
+    afficherUtilisateur(utilisateur);
+}
+
+// Remplace le bouton Google par la photo de l'étudiant
+function afficherUtilisateur(user) {
+    const zone = document.getElementById('zoneUtilisateur');
+    if(zone) {
+        zone.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 20px;">
+                <img src="${user.photo}" alt="Profil" style="width: 32px; height: 32px; border-radius: 50%; border: 2px solid white;">
+                <span style="color: white; font-weight: bold; font-size: 0.9em;">${user.nom}</span>
+                <button onclick="deconnexion()" style="background: none; border: none; color: #ffcccc; cursor: pointer; font-size: 1.2em; padding: 0;" title="Se déconnecter">🚪</button>
+            </div>
+        `;
+    }
+}
+
+// Pour se déconnecter
+function deconnexion() {
+    localStorage.removeItem('utilisateur_biblio');
+    location.reload(); // Recharge la page
+}
+
+// ==========================================
+// 💬 SYSTÈME DE COMMENTAIRES (FORUM)
+// ==========================================
+
+// Déterminer sur quelle page on se trouve (ex: 'index', 'bibliotheque')
+function getNomPageActuelle() {
+    let nom = window.location.pathname.split('/').pop().replace('.html', '');
+    return (nom === "" || nom === "/") ? 'index' : nom;
+}
+
+// 1. Charger les commentaires au démarrage de la page
+async function chargerCommentairesPage() {
+    const conteneur = document.getElementById('liste-commentaires');
+    if(!conteneur) return; // Si la page n'a pas de forum, on arrête.
+
+    const pageNom = getNomPageActuelle();
+
+    try {
+        const response = await fetch(`/api/commentaires/${pageNom}`);
+        const commentaires = await response.json();
+
+        conteneur.innerHTML = '';
+
+        if(commentaires.length === 0) {
+            conteneur.innerHTML = '<p style="text-align: center; color: #64748b; font-style: italic; padding: 20px;">Aucun message pour le moment. Soyez le premier à lancer la discussion ! 🎤</p>';
+            return;
+        }
+
+        commentaires.forEach(c => {
+            const date = new Date(c.date_creation).toLocaleString('fr-FR', {day: '2-digit', month: 'short', hour: '2-digit', minute:'2-digit'});
+            conteneur.innerHTML += `
+                <div style="display: flex; gap: 15px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #e2e8f0;">
+                    <img src="${c.photo_url}" style="width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid #e0f2fe;">
+                    <div style="flex: 1;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                            <strong style="color: #0f172a; font-size: 1.05em;">${c.nom_utilisateur}</strong>
+                            <span style="color: #94a3b8; font-size: 0.8em;">🕒 ${date}</span>
+                        </div>
+                        <p style="margin: 0; color: #334155; line-height: 1.5; word-break: break-word;">${c.message}</p>
+                    </div>
+                </div>
+            `;
+        });
+    } catch (error) {
+        conteneur.innerHTML = '<p style="color: red; text-align: center;">Erreur lors du chargement des messages.</p>';
+    }
+}
+
+// 2. Envoyer un nouveau commentaire
+async function envoyerCommentairePage() {
+    const userStr = localStorage.getItem('utilisateur_biblio');
+    if(!userStr) {
+        alert("⚠️ Vous devez vous connecter avec Google (en haut à droite) pour pouvoir discuter !");
+        return;
+    }
+
+    const user = JSON.parse(userStr);
+    const input = document.getElementById('nouveau-commentaire');
+    const message = input.value.trim();
+
+    if(message === "") return alert("Votre message est vide !");
+
+    const pageNom = getNomPageActuelle();
+
+    try {
+        const btn = event.target;
+        btn.textContent = "Envoi...";
+        btn.disabled = true;
+
+        const response = await fetch('/api/commentaires', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                page_nom: pageNom,
+                google_id: user.google_id,
+                nom_utilisateur: user.nom,
+                photo_url: user.photo,
+                message: message
+            })
+        });
+
+        if(response.ok) {
+            input.value = ''; // On vide la case
+            chargerCommentairesPage(); // On recharge la liste pour voir le nouveau message
+        } else {
+            alert("Erreur lors de l'envoi.");
+        }
+
+        btn.textContent = "Envoyer le message 🚀";
+        btn.disabled = false;
+    } catch (error) {
+        alert("Serveur injoignable.");
+    }
+}
+
+// ==========================================
+// 🚀 AU CHARGEMENT DE LA PAGE
+// ==========================================
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. On vérifie si l'étudiant est déjà connecté
+    const userStr = localStorage.getItem('utilisateur_biblio');
+    if(userStr) {
+        afficherUtilisateur(JSON.parse(userStr));
+    }
+    
+    // 2. On charge les commentaires de la page actuelle
+    chargerCommentairesPage();
+});
