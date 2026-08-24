@@ -774,6 +774,7 @@ async function chargerCommentairesPage() {
 }
 
 // 2. Envoyer un nouveau commentaire
+// 2. Envoyer un nouveau commentaire
 async function envoyerCommentairePage() {
     const userStr = localStorage.getItem('utilisateur_biblio');
     if(!userStr) {
@@ -789,10 +790,14 @@ async function envoyerCommentairePage() {
 
     const pageNom = getNomPageActuelle();
 
+    // On récupère le bouton de manière plus sécurisée
+    const btn = document.querySelector('button[onclick="envoyerCommentairePage()"]');
+
     try {
-        const btn = event.target;
-        btn.textContent = "Envoi...";
-        btn.disabled = true;
+        if(btn) {
+            btn.textContent = "Envoi en cours...";
+            btn.disabled = true;
+        }
 
         const response = await fetch('/api/commentaires', {
             method: 'POST',
@@ -808,15 +813,19 @@ async function envoyerCommentairePage() {
 
         if(response.ok) {
             input.value = ''; // On vide la case
-            chargerCommentairesPage(); // On recharge la liste pour voir le nouveau message
+            chargerCommentairesPage(); // On recharge la liste
         } else {
-            alert("Erreur lors de l'envoi.");
+            alert("Erreur du serveur (Code: " + response.status + "). Le backend a un problème.");
         }
 
-        btn.textContent = "Envoyer le message 🚀";
-        btn.disabled = false;
     } catch (error) {
-        alert("Serveur injoignable.");
+        console.error("Erreur Fetch:", error);
+        alert("Serveur injoignable. Le serveur Node.js est peut-être éteint.");
+    } finally {
+        if(btn) {
+            btn.textContent = "Envoyer le message 🚀";
+            btn.disabled = false;
+        }
     }
 }
 
