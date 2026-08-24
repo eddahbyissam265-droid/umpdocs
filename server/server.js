@@ -103,7 +103,47 @@ app.get('/api/annonces', async (req, res) => {
 // ==========================================
 const PORT = process.env.PORT || 3000;
 // 🛠️ ROUTE TEMPORAIRE POUR RÉPARER LA TABLE DES DOCUMENTS
+// ==========================================
+// GESTION DES COMMENTAIRES (FORUM)
+// ==========================================
 
+// 1. Ajouter un nouveau message
+app.post('/api/commentaires', async (req, res) => {
+    const { page_nom, google_id, nom_utilisateur, photo_url, message } = req.body;
+
+    if (!page_nom || !google_id || !message) {
+        return res.status(400).json({ error: "Données incomplètes" });
+    }
+
+    const { data, error } = await supabase
+        .from('commentaires')
+        .insert([{ page_nom, google_id, nom_utilisateur, photo_url, message }]);
+
+    if (error) {
+        console.error("Erreur SQL lors de l'ajout du commentaire:", error.message);
+        return res.status(500).json({ error: "Erreur lors de la sauvegarde" });
+    }
+
+    res.status(201).json({ success: true });
+});
+
+// 2. Récupérer les messages d'une page précise
+app.get('/api/commentaires/:page', async (req, res) => {
+    const pageNom = req.params.page;
+
+    const { data, error } = await supabase
+        .from('commentaires')
+        .select('*')
+        .eq('page_nom', pageNom)
+        .order('date_creation', { ascending: false }); // false = Les plus récents en haut
+
+    if (error) {
+        console.error("Erreur SQL lors de la lecture des commentaires:", error.message);
+        return res.status(500).json({ error: "Erreur de lecture" });
+    }
+
+    res.json(data);
+});
 
 app.listen(PORT, () => {
     console.log(`=========================================`);
